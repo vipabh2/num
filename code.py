@@ -172,7 +172,7 @@ async def handle_start_game(event):
         number2 = random.randint(1, 6)
         group_game_status[chat_id]['number2'] = number2
         await event.edit(buttons=None)
-        await event.answer(
+        await event.respond(
             f"عزيزي [{event.sender.first_name}](https://t.me/{username})! تم تسجيلك في لعبة محيبس \nارسل `جيب ` + رقم للحزر \n ارسل `طك ` + رقم للتخمين.",
             parse_mode="Markdown"
         
