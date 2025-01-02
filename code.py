@@ -146,21 +146,12 @@ group_game_status = {}
 ###############################################
 @client.on(events.NewMessage(pattern='/rings'))
 async def start_game(event):
-    global number2
-    username = event.sender.username or "unknown"    
-    markup = [
-        [Button.inline("ابدأ اللعبة", b"startGame")]
-    ]
-    await event.reply(
-        f"أهلاً [{event.sender.first_name}](https://t.me/{username})! حياك الله. اضغط على الزر لبدء اللعبة.",
-        buttons=markup
-    )
-    await client.send_file(
-        event.chat_id,
-        "https://t.me/VIPABH/1210",  
-        caption=f"أهلاً [{event.sender.first_name}](https://t.me/{username})! حياك الله. اضغط على الزر لبدء اللعبة.",
-        parse_mode="Markdown"
-    )
+    username = event.sender.username or "unknown"
+    markup = [[Button.inline("ابدأ اللعبة", b"startGame")]]
+    
+    await event.reply(f"أهلاً [{event.sender.first_name}](https://t.me/{username})! حياك الله. اضغط على الزر لبدء اللعبة.", buttons=markup)
+    await client.send_file(event.chat_id, "https://t.me/VIPABH/1210", caption="أهلاً! اضغط على الزر لبدء اللعبة.", parse_mode="Markdown")
+
 @client.on(events.CallbackQuery(func=lambda call: call.data == b"startGame"))
 async def handle_start_game(event):
     chat_id = event.chat_id
