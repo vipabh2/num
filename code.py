@@ -175,8 +175,32 @@ async def handle_start_game(event):
         await event.respond(
             f"عزيزي [{event.sender.first_name}](https://t.me/@{username})! تم تسجيلك في لعبة محيبس \nارسل `جيب ` + رقم للحزر \n ارسل `طك ` + رقم للتخمين.",
             parse_mode="Markdown"
-        
         )
+##################################################
+@client.on(events.NewMessage(pattern=r'جيب (\d+)'))
+async def handle_guess(event):
+    global number2, game_board, points, group_game_status
+    chat_id = event.chat_id
+    if chat_id in group_game_status and group_game_status[chat_id]['game_active']:
+        try:
+            guess = int(event.text.split()[1])  # استخراج الرقم من الرسالة
+            if 1 <= guess <= 6:  # التحقق من صحة الرقم
+                if guess == number2:
+                    winner_id = event.sender_id  # معرف المستخدم الفائز
+                    points[winner_id] = points.get(winner_id, 0) + 1  # إضافة النقاط للمستخدم الفائز
+                    sender_first_name = event.sender.first_name
+                    game_board = [["💍" if i == number2 - 1 else "🖐️" for i in range(6)]]
+                    await event.reply(f'🎉 الف مبروك! اللاعب ({sender_first_name}) وجد المحبس 💍!\n{format_board(game_board, numbers_board)}')
+                    reset_game(chat_id)
+                else:
+                    sender_first_name = event.sender.first_name
+                    game_board = [["❌" if i == guess - 1 else "🖐️" for i in range(6)]]
+                    await event.reply(f"ضاع البات ماضن بعد تلگونة ☹️ \n{format_board(game_board, numbers_board)}")
+                    reset_game(chat_id)
+            else:
+                await event.reply("❗ يرجى إدخال رقم صحيح بين 1 و 6.")  # إذا كان الرقم خارج النطاق
+        except (IndexError, ValueError):
+            await event.reply("❗ يرجى إدخال رقم صحيح بين 1 و 6.")  # إذا كانت المدخلات غير صحيحة
 
 
 client.run_until_disconnected()
