@@ -115,12 +115,48 @@ async def start_search(event):
     else:
         await event.reply(f"حدث خطأ: {response.status_code}")
     searching_state[event.chat.id] = False
-
-
+    
 @client.on(events.NewMessage(func=lambda e: e.text and e.text.strip().lower() in ['عاشوراء']))
 async def ashouau(event):
     pic = "links/abh.jpg"
     await client.send_file(event.chat_id, pic, caption="تقبل الله صالح الأعمال")
+
+group_game_status = {}
+number2 = None
+game_board = [["👊", "👊", "👊", "👊", "👊", "👊"]]
+numbers_board = [["1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣"]]
+original_game_board = [["👊", "👊", "👊", "👊", "👊", "👊"]]
+points = {}
+
+def format_board(game_board, numbers_board):
+    """تنسيق الجدول للعرض بشكل مناسب"""
+    formatted_board = ""
+    formatted_board += " ".join(numbers_board[0]) + "\n"
+    formatted_board += " ".join(game_board[0]) + "\n"
+    return formatted_board
+
+def reset_game(chat_id):
+    """إعادة تعيين حالة اللعبة بعد انتهائها"""
+    global game_board, number2, group_game_status
+    game_board = [row[:] for row in original_game_board]
+    number2 = None
+    group_game_status[chat_id]['game_active'] = False
+    group_game_status[chat_id]['active_player_id'] = None
+
+@client.on(events.NewMessage(pattern='/rings'))
+async def start_game(event):
+    global number2
+    username = event.sender.username or "unknown"
+    markup = [
+        [InlineKeyboardButton("ابدأ اللعبة", callback_data="startGame")]
+    ]
+    await event.reply(
+        "أهلاً [{}](https://t.me/{})! حياك الله. اضغط على الزر لبدء اللعبة.".format(event.sender.first_name, username),
+        file="https://t.me/VIPABH/1210", 
+        caption="أهلاً [{}](https://t.me/{})! حياك الله. اضغط على الزر لبدء اللعبة.".format(event.sender.first_name, username),
+        parse_mode="Markdown",
+        buttons=markup
+    )
 
 
 
