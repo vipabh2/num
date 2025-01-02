@@ -119,8 +119,8 @@ async def start_search(event):
 
 @client.on(events.NewMessage(func=lambda e: e.text and e.text.strip().lower() in ['عاشوراء']))
 async def ashouau(event):
-pic = "links/abh.jpg"
-await client.send_file(event.chat_id, pic, caption="تقبل الله صالح الأعمال")
+    pic = "links/abh.jpg"
+    await client.send_file(event.chat_id, pic, caption="تقبل الله صالح الأعمال")
 
 
 
