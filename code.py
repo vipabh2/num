@@ -114,10 +114,13 @@ async def start_search(event):
             await event.reply("حدث خطأ في استجابة API.")
     else:
         await event.reply(f"حدث خطأ: {response.status_code}")
-
     searching_state[event.chat.id] = False
 
 
+@client.on(events.NewMessage(func=lambda e: e.text and e.text.strip().lower() in ['عاشوراء']))
+async def ashouau(event):
+    url = "https://t.me/VIPABH/1213" 
+    await event.reply("تقبل الله صالح الأعمال", file=url)
 
 
 
