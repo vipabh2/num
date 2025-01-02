@@ -21,7 +21,8 @@ abh = [
 async def reply(event):
     vipabh = random.choice(abh)
     if vipabh.startswith("http"):
-        await event.reply(vipabh, file=vipabh)
+        # await event.reply(vipabh, file=vipabh)
+        await event.reply(vipabh)
     else:
         await event.reply(vipabh)
 
