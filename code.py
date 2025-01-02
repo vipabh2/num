@@ -4,6 +4,7 @@ import random
 api_id = os.getenv('API_ID')      
 api_hash = os.getenv('API_HASH')  
 bot_token = os.getenv('BOT_TOKEN') 
+client = TelegramClient('new_bot_session', api_id, api_hash).start(bot_token=bot_token)
 
 # قائمة الردود المحتملة
 abh = [
@@ -16,7 +17,6 @@ abh = [
 ]
 
 # إنشاء العميل
-client = TelegramClient('new_bot_session', api_id, api_hash).start(bot_token=bot_token)
 
 # الاستماع للرسائل الجديدة
 @client.on(events.NewMessage(func=lambda e: e.text and ('مخفي' in e.text.strip().lower() or 'المخفي' in e.text.strip().lower())))
