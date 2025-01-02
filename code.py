@@ -1,7 +1,11 @@
 from telethon import TelegramClient, events
-import os
+from models import add_or_update_user, add_point_to_winner, get_user_score
+from bs4 import BeautifulSoup
 import requests
 import random
+import time
+from datetime import datetime
+import os
 
 api_id = os.getenv('API_ID')      
 api_hash = os.getenv('API_HASH')  
