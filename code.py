@@ -1,4 +1,4 @@
-from telethon import TelegramClient, events
+from telethon import TelegramClient, events, Button
 from models import add_or_update_user, add_point_to_winner, get_user_score
 from bs4 import BeautifulSoup
 import requests
