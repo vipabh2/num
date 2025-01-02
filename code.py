@@ -143,28 +143,31 @@ def reset_game(chat_id):
     group_game_status[chat_id]['game_active'] = False
     group_game_status[chat_id]['active_player_id'] = None
 
+
+
 @client.on(events.NewMessage(pattern='/rings'))
 async def start_game(event):
     global number2
     username = event.sender.username or "unknown"
     markup = [
-        [InlineKeyboardButton("ابدأ اللعبة", callback_data="startGame")]
+        [Button.inline("ابدأ اللعبة", b"startGame")]
     ]
     await event.reply(
-        "أهلاً [{}](https://t.me/{})! حياك الله. اضغط على الزر لبدء اللعبة.".format(event.sender.first_name, username),
+        f"أهلاً [{event.sender.first_name}](https://t.me/{username})! حياك الله. اضغط على الزر لبدء اللعبة.",
         file="https://t.me/VIPABH/1210", 
-        caption="أهلاً [{}](https://t.me/{})! حياك الله. اضغط على الزر لبدء اللعبة.".format(event.sender.first_name, username),
+        caption=f"أهلاً [{event.sender.first_name}](https://t.me/{username})! حياك الله. اضغط على الزر لبدء اللعبة.",
         parse_mode="Markdown",
         buttons=markup
     )
-group_game_status = {}
 
 @client.on(events.CallbackQuery(func=lambda call: call.data == b"startGame"))
 async def handle_start_game(event):
     chat_id = event.chat_id
     user_id = event.sender_id
+    
     if chat_id not in group_game_status:
-        group_game_status[chat_id] = {'game_active': False, 'active_player_id': None}    
+        group_game_status[chat_id] = {'game_active': False, 'active_player_id': None}
+    
     if not group_game_status[chat_id]['game_active']:
         group_game_status[chat_id]['game_active'] = True
         group_game_status[chat_id]['active_player_id'] = user_id
@@ -172,7 +175,7 @@ async def handle_start_game(event):
         number2 = random.randint(1, 6)
         group_game_status[chat_id]['number2'] = number2
         await event.message.edit(reply_markup=None)
-        await event.answer("العبة بدأت! رقمك هو: " + str(number2))
+        await event.answer(f"العبة بدأت! رقمك هو: {number2}")
 
 
 
