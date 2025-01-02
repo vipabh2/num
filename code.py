@@ -119,7 +119,7 @@ async def start_search(event):
 
 @client.on(events.NewMessage(func=lambda e: e.text and e.text.strip().lower() in ['عاشوراء']))
 async def ashouau(event):
-    url = "https://t.me/VIPABH/1213" 
+    url = "https://imgur.com/a/p2fGzud" 
     await event.reply("تقبل الله صالح الأعمال", file=url)
 
 
