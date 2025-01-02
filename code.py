@@ -6,12 +6,12 @@ import random
 import time
 from datetime import datetime
 import os
-
+#########
 api_id = os.getenv('API_ID')      
 api_hash = os.getenv('API_HASH')  
 bot_token = os.getenv('BOT_TOKEN') 
 client = TelegramClient('new_bot_session', api_id, api_hash).start(bot_token=bot_token)
-
+#######################################################################################
 abh = [
     "ها",
     "شرايد",
@@ -20,8 +20,7 @@ abh = [
     "😶",
     "https://t.me/VIPABH/1214"
 ]
-
-
+########################################################
 @client.on(events.NewMessage(func=lambda e: e.text and (
     'مخفي' in e.text.strip().lower() or 
     'المخفي' in e.text.strip().lower() or
@@ -32,7 +31,7 @@ async def reply(event):
         await event.reply(file=vipabh)
     else:
         await event.reply(vipabh)
-        
+########################################################
 url = "https://ar.wikipedia.org/w/api.php"
 searching_state = {}
 @client.on(events.NewMessage(func=lambda e: e.text and e.text.strip().lower().startswith('ابحث عن')))
@@ -78,7 +77,7 @@ async def cut(event):
             await event.reply("حدث خطأ في استجابة API.")
     else:
         await event.reply(f"حدث خطأ في الاتصال بـ Wikipedia. حاول مرة أخرى لاحقًا.")
-        
+##########################################################################        
 searching_state = {}
 @client.on(events.NewMessage(func=lambda e: e.text and e.text.strip().lower().startswith('ابحث عام')))
 async def start_search(event):
@@ -115,12 +114,12 @@ async def start_search(event):
     else:
         await event.reply(f"حدث خطأ: {response.status_code}")
     searching_state[event.chat.id] = False
-    
+############################################################    
 @client.on(events.NewMessage(func=lambda e: e.text and e.text.strip().lower() in ['عاشوراء']))
 async def ashouau(event):
     pic = "links/abh.jpg"
     await client.send_file(event.chat_id, pic, caption="تقبل الله صالح الأعمال")
-
+########################################################################
 group_game_status = {}
 number2 = None
 game_board = [["👊", "👊", "👊", "👊", "👊", "👊"]]
@@ -143,9 +142,8 @@ def reset_game(chat_id):
     group_game_status[chat_id]['game_active'] = False
     group_game_status[chat_id]['active_player_id'] = None
 
-
 group_game_status = {}
-
+###############################################
 @client.on(events.NewMessage(pattern='/rings'))
 async def start_game(event):
     global number2
@@ -155,11 +153,14 @@ async def start_game(event):
     ]
     await event.reply(
         f"أهلاً [{event.sender.first_name}](https://t.me/{username})! حياك الله. اضغط على الزر لبدء اللعبة.",
-        file="https://t.me/VIPABH/1210", 
-        caption=f"أهلاً [{event.sender.first_name}](https://t.me/{username})! حياك الله. اضغط على الزر لبدء اللعبة.",
-        parse_mode="Markdown",
         buttons=markup
     )
+    await event.respond(
+        file="https://t.me/VIPABH/1210", 
+        caption=f"أهلاً [{event.sender.first_name}](https://t.me/{username})! حياك الله. اضغط على الزر لبدء اللعبة.",
+        parse_mode="Markdown"
+    )
+
 @client.on(events.CallbackQuery(func=lambda call: call.data == b"startGame"))
 async def handle_start_game(event):
     chat_id = event.chat_id
@@ -178,6 +179,7 @@ async def handle_start_game(event):
         
         await event.message.edit(reply_markup=None)
         await event.answer(f"العبة بدأت! رقمك هو: {number2}")
+
 
 
 
