@@ -1,4 +1,5 @@
 from telethon import TelegramClient, events
+import os
 import random
 
 api_id = os.getenv('API_ID')      
