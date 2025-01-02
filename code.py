@@ -1,19 +1,11 @@
-from telethon import TelegramClient, events, Button
-from bs4 import BeautifulSoup
-import requests
+from telethon import TelegramClient, events
 import random
-import time
-from datetime import datetime
-import os
-from models import add_or_update_user, add_point_to_winner, get_user_score
 
+api_id = 'YOUR_API_ID'
+api_hash = 'YOUR_API_HASH'
+bot_token = 'YOUR_BOT_TOKEN'
 
-api_id = os.getenv('API_ID')      
-api_hash = os.getenv('API_HASH')  
-bot_token = os.getenv('BOT_TOKEN') 
-client = TelegramClient('new_bot_session', api_id, api_hash).start(bot_token=bot_token)
-
-
+# قائمة الردود المحتملة
 abh = [
     "ها",
     "شرايد",
@@ -23,20 +15,19 @@ abh = [
     "https://t.me/VIPABH/1214"
 ]
 
-@client.on(events.NewMessage(func=lambda e: e.text and (e.text.strip().lower().startswith('مخفي') or e.text.strip().lower().startswith('المخفي'))))
+# إنشاء العميل
+client = TelegramClient('new_bot_session', api_id, api_hash).start(bot_token=bot_token)
+
+# الاستماع للرسائل الجديدة
+@client.on(events.NewMessage(func=lambda e: e.text and ('مخفي' in e.text.strip().lower() or 'المخفي' in e.text.strip().lower())))
 async def reply(event):
-    vipabh = random.choice(abh)
+    vipabh = random.choice(abh)  # اختيار رد عشوائي
     if vipabh.startswith("http"):
-        await client.send_message(event.chat_id, vipabh, reply_to=event.message.id)
+        # إرسال رسالة بصوت إذا كان الرد هو رابط
+        await event.reply(vipabh, file=vipabh)
     else:
+        # إرسال الرد النصي
         await event.reply(vipabh)
 
-
-
-print("البوت قيد التشغيل...")
-while True:
-    try:
-        client.run_until_disconnected()
-    except Exception as e:
-        print(f"حدث خطأ في التشغيل الرئيسي: {e}")
-        time.sleep(5)
+# تشغيل العميل
+client.run_until_disconnected()
