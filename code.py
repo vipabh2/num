@@ -154,26 +154,24 @@ async def start_game(event):
         parse_mode="Markdown",
         buttons=markup
     )
+    
 @client.on(events.CallbackQuery(func=lambda call: call.data == b"startGame"))
 async def handle_start_game(event):
     chat_id = event.chat_id
     user_id = event.sender_id
-    
+    username = event.sender.username or "unknown"  
     if chat_id not in group_game_status:
         group_game_status[chat_id] = {'game_active': False, 'active_player_id': None}
-    
     if not group_game_status[chat_id]['game_active']:
         group_game_status[chat_id]['game_active'] = True
         group_game_status[chat_id]['active_player_id'] = user_id
-        
         global number2
         number2 = random.randint(1, 6)
         group_game_status[chat_id]['number2'] = number2
-        
         await event.message.edit(reply_markup=None)
-        await event.answer(f"العبة بدأت! رقمك هو: {number2}")
-
-
+        await event.respond(
+            f"عزيزي [{event.sender.first_name}](https://t.me/{username})! تم تسجيلك في لعبة محيبس \nارسل `جيب ` + رقم للحزر \n ارسل `طك ` + رقم للتخمين.",
+            parse_mode="Markdown"
 
 
 
