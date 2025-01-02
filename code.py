@@ -159,19 +159,23 @@ async def start_game(event):
 async def handle_start_game(event):
     chat_id = event.chat_id
     user_id = event.sender_id
-    username = event.sender.username or "unknown" 
+    username = event.sender.username or "unknown"
+    
     if chat_id not in group_game_status:
-        group_game_status[chat_id] = {'game_active': False, 'active_player_id': None}    
+        group_game_status[chat_id] = {'game_active': False, 'active_player_id': None}
+    
     if not group_game_status[chat_id]['game_active']:
         group_game_status[chat_id]['game_active'] = True
         group_game_status[chat_id]['active_player_id'] = user_id
+    
         global number2
         number2 = random.randint(1, 6)
         group_game_status[chat_id]['number2'] = number2
-        await event.edit(reply_markup=None)
+        await event.edit(buttons=None)
         await event.answer(
             f"عزيزي [{event.sender.first_name}](https://t.me/{username})! تم تسجيلك في لعبة محيبس \nارسل `جيب ` + رقم للحزر \n ارسل `طك ` + رقم للتخمين.",
             parse_mode="Markdown"
+        
         )
 
 
