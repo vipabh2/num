@@ -164,16 +164,15 @@ async def handle_start_game(event):
         group_game_status[chat_id] = {'game_active': False, 'active_player_id': None}
     if not group_game_status[chat_id]['game_active']:
         group_game_status[chat_id]['game_active'] = True
-        group_game_status[chat_id]['active_player_id'] = user_id
+        group_game_status[chat_id]['active_player_id'] = user_id        
         global number2
         number2 = random.randint(1, 6)
         group_game_status[chat_id]['number2'] = number2
-        await event.edit_message(reply_markup=None)
-        await event.respond(
+        await event.message.edit(reply_markup=None)
+        await event.answer(
             f"عزيزي [{event.sender.first_name}](https://t.me/{username})! تم تسجيلك في لعبة محيبس \nارسل `جيب ` + رقم للحزر \n ارسل `طك ` + رقم للتخمين.",
             parse_mode="Markdown"
         )
-
 
 
 client.run_until_disconnected()
