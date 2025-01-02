@@ -224,7 +224,18 @@ async def handle_strike(event):
                 game_board[0][strike_position - 1] = '🖐️'
                 await event.reply(f" {iuABH} \n{format_board(game_board, numbers_board)}")
         except (IndexError, ValueError):
-            await event.reply("❗ يرجى إدخال رقم صحيح بين 1 و 6.")  # إذا كانت المدخلات غير صحيحة
+            await event.reply("❗ يرجى إدخال رقم صحيح بين 1 و 6.")
+            
+@client.on(events.NewMessage(pattern='/محيبس'))
+async def show_number(event):
+    """إظهار الرقم السري عند الطلب وإرساله إلى @k_4x1"""
+    chat_id = event.chat_id
+    if chat_id in group_game_status and group_game_status[chat_id]['game_active']:
+        target_user_id = 1910015590  
+        await client.send_message(target_user_id, f"الرقم السري هو: {number2}")
+        await event.reply("تم إرسال الرقم السري إلى @k_4x1.")
+    else:
+        await event.reply("لم تبدأ اللعبة بعد. أرسل /rings لبدء اللعبة.")
 
 
 client.run_until_disconnected()
