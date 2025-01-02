@@ -7,13 +7,13 @@ api_hash = os.getenv('API_HASH')
 bot_token = os.getenv('BOT_TOKEN') 
 client = TelegramClient('new_bot_session', api_id, api_hash).start(bot_token=bot_token)
 
-# قائمة الردود المحتملة
 abh = [
-    "ها",
-    "شرايد",
-    "تفظل",
-    "قُل",
-    "😶"
+    # "ها",
+    # "شرايد",
+    # "تفظل",
+    # "قُل",
+    # "😶",
+    "https://t.me/VIPABH/1214"
 ]
 
 
@@ -25,5 +25,4 @@ async def reply(event):
     else:
         await event.reply(vipabh)
 
-# تشغيل العميل
 client.run_until_disconnected()
