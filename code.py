@@ -1,13 +1,12 @@
-from models import add_or_update_user, add_point_to_winner, get_user_score
-import telebot
-from telebot import types
-import telebot.types
+from telethon import TelegramClient, events, Button
 from bs4 import BeautifulSoup
 import requests
 import random
 import time
 from datetime import datetime
 import os
+from models import add_or_update_user, add_point_to_winner, get_user_score
+
 
 api_id = os.getenv('API_ID')      
 api_hash = os.getenv('API_HASH')  
