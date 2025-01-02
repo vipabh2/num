@@ -13,21 +13,16 @@ abh = [
     "شرايد",
     "تفظل",
     "قُل",
-    "😶",
-    "https://t.me/VIPABH/1214"
+    "😶"
 ]
 
-# إنشاء العميل
 
-# الاستماع للرسائل الجديدة
 @client.on(events.NewMessage(func=lambda e: e.text and ('مخفي' in e.text.strip().lower() or 'المخفي' in e.text.strip().lower())))
 async def reply(event):
-    vipabh = random.choice(abh)  # اختيار رد عشوائي
+    vipabh = random.choice(abh)
     if vipabh.startswith("http"):
-        # إرسال رسالة بصوت إذا كان الرد هو رابط
         await event.reply(vipabh, file=vipabh)
     else:
-        # إرسال الرد النصي
         await event.reply(vipabh)
 
 # تشغيل العميل
