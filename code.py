@@ -155,8 +155,8 @@ async def start_game(event):
         f"أهلاً [{event.sender.first_name}](https://t.me/{username})! حياك الله. اضغط على الزر لبدء اللعبة.",
         buttons=markup
     )
-    await event.respond(
-        file="https://t.me/VIPABH/1210", 
+    await event.send_file(
+        "https://t.me/VIPABH/1210", 
         caption=f"أهلاً [{event.sender.first_name}](https://t.me/{username})! حياك الله. اضغط على الزر لبدء اللعبة.",
         parse_mode="Markdown"
     )
@@ -179,6 +179,7 @@ async def handle_start_game(event):
         
         await event.message.edit(reply_markup=None)
         await event.answer(f"العبة بدأت! رقمك هو: {number2}")
+
 
 
 
