@@ -259,6 +259,15 @@ nurl = ('164', '165', '166', '167', '168', '169', '170')
 
 furl = ('171', '172', '173', '174')
 
+async def send_audio_from_list(call, url_list):
+    rl = random.choice(url_list)
+    audio_url = f"https://t.me/sossosic/{rl}"
+    await call.respond(
+        audio=audio_url,
+        caption="᯽︙اذكر القائم",
+        parse_mode="html"
+    )
+
 @client.on(events.NewMessage(func=lambda event: event.text in ['لطمية', 'لطميه']))
 async def vipabh(event):
     username = event.sender.username or "لا يوجد اسم مستخدم"
@@ -276,21 +285,13 @@ async def vipabh(event):
         buttons=markup,
         parse_mode="Markdown"
     )
-    async def send_audio_from_list(call, url_list):
-        rl = random.choice(url_list)
-        audio_url = f"https://t.me/sossosic/{rl}"
-        await call.respond(
-        audio=audio_url,
-        caption="᯽︙اذكر القائم",
-        parse_mode="html"
-    )
 
 @client.on(events.CallbackQuery(func=lambda call: call.data == b"basim"))
 async def send_basim(call):
     await send_audio_from_list(call, furl)
     await call.edit(reply_markup=None)
 
-@client.on(events.CallbackQuery(func=lambda call: call.data == b"muh"))
+@client.on(events.CallbackQuery(func=lambda call: call.data == b"moh"))
 async def send_khaqani(call):
     await send_audio_from_list(call, mohmurl)
     await call.edit(reply_markup=None)
@@ -309,7 +310,6 @@ async def send_n(call):
 async def send_f(call):
     await send_audio_from_list(call, furl)
     await call.edit(reply_markup=None)
-
 
 
 
