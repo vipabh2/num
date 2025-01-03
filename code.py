@@ -347,27 +347,11 @@ async def start_game(event):
     markup = [[Button.inline("ابدأ اللعبة", b"start_game")]]
     await event.reply(
         f"أهلاً [{event.sender.first_name}](https://t.me/{username})! حياك الله. اضغط على الزر لبدء اللعبة.",
-        file="https://t.me/VIPABH/1210",  
+        file="https://t.me/VIPABH/1204",  
         parse_mode="Markdown",
         buttons=markup
         )
-    global game_active, attempts, active_player_id
-    game_active = False
-    attempts = 0
-    active_player_id = None
-    username = event.sender.username if event.sender.username else "لا يوجد اسم مستخدم"
-    markup = [
-        [Button.inline("ابدأ اللعبة", b"start_game")]
-    ]
-    await event.reply(
-        f"اهلا [{event.sender.first_name}](https://t.me/{username}) حياك الله! اضغط على الزر لبدء اللعبة.",
-        File="https://t.me/VIPABH/1204",
-        caption="اهلا بك! اضغط على الزر لبدء اللعبة.",
-        parse_mode="Markdown",
-        buttons=markup
-    )
-@client.on(events.CallbackQuery(data=b"start_game"))
-async def start_new_game(event):
+    async def start_new_game(event):
     global game_active, number, attempts, active_player_id
     if not game_active:
         number = random.randint(1, 10)
@@ -379,6 +363,30 @@ async def start_new_game(event):
         attempts = 0
     else:
         await event.reply('اللعبة قيد التشغيل، يرجى انتهاء الجولة الحالية أولاً')
+
+
+    
+    global game_active, attempts, active_player_id
+    game_active = False
+    attempts = 0
+    active_player_id = None
+    username = event.sender.username if event.sender.username else "لا يوجد اسم مستخدم"
+    markup = [
+        [Button.inline("ابدأ اللعبة", b"start_game")]
+    ]
+# @client.on(events.CallbackQuery(data=b"start_game"))
+# async def start_new_game(event):
+#     global game_active, number, attempts, active_player_id
+#     if not game_active:
+#         number = random.randint(1, 10)
+#         active_player_id = event.sender_id
+#         username = event.sender.username if event.sender.username else "لا يوجد اسم مستخدم"
+#         await event.edit_reply_markup(None)
+#         await event.reply(f'عزيزي [{event.sender.first_name}](t.me/@{username}) اختر أي رقم من 1 إلى 10 🌚')
+#         game_active = True
+#         attempts = 0
+#     else:
+#         await event.reply('اللعبة قيد التشغيل، يرجى انتهاء الجولة الحالية أولاً')
 
 
 
