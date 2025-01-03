@@ -311,21 +311,22 @@ async def send_basim(call):
     await send_audio_from_list(call, furl)
     await call.edit(buttons=None)
 ###########################################
-video_urls = [f"t.me/iuabh/{i}" for i in range(242, 256)]
+# video_urls = [f"t.me/iuabh/{i}" for i in range(242, 256)]
 @client.on(events.NewMessage(func=lambda message: message.text in ['ميم', 'ميمز']))
 async def send_random_file(event):
-    await asyncio.sleep(2)
-    rl = random.randint(2, 255)
+    # await asyncio.sleep(2)
+    # rl = random.randint(2, 255)
+    rl = random.randint(2, 240)
     url = f"t.me/iuabh/{rl}"
 
     try:
-        if url in video_urls:
-            await event.reply(
-                video=url,
-                caption="😎يسعد مسائك",
-                reply_to=event.message.id
-            )
-        else:
+        # if url in video_urls:
+        #     await event.reply(
+        #         video=url,
+        #         caption="😎يسعد مسائك",
+        #         reply_to=event.message.id
+        #     )
+        # else:
             await event.reply(
                 media=InputMediaPhoto(url),
                 caption="😎يسعد مسائك",
