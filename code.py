@@ -445,4 +445,4 @@ async def handle_guess(event):
                                 client.run_until_disconnected() 
                             except Exception as e:
                                 print(f"حدث خطأ: {e}")
-                                time.sleep(5) 
+                                time.sleep(5)
