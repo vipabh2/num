@@ -317,7 +317,7 @@ video_urls = [f"{i}.mp4" for i in range(1, 15)]
 async def send_random_file(event):
     await asyncio.sleep(2)
     rl = random.randint(1, 14)
-    file_name = f"{rl}.mp4"  # افترض أن الفيديوهات بتنسيق .mp4
+    file_name = f"{rl}.MP4" 
     file_path = os.path.join(mem_folder, file_name)
     try:
         if os.path.exists(file_path):
