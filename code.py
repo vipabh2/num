@@ -264,7 +264,7 @@ async def send_audio_from_list(call, url_list):
     rl = random.choice(url_list)
     audio_url = f"https://t.me/sossosic/{rl}"
     await call.respond(
-        audio=audio_url,
+        file=audio_url,
         caption="᯽︙اذكر القائم",
         parse_mode="html"
     )
