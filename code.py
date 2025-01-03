@@ -275,11 +275,10 @@ async def vipabh(event):
         file="https://t.me/VIPABH/1212",
         buttons=markup,
         parse_mode="Markdown"
-    )
-async def send_audio_from_list(call, url_list):
+    )async def send_audio_from_list(call, url_list):
     rl = random.choice(url_list)
     audio_url = f"https://t.me/sossosic/{rl}"
-    await call.message.reply(
+    await call.respond(
         audio=audio_url,
         caption="᯽︙اذكر القائم",
         parse_mode="html"
@@ -309,6 +308,7 @@ async def send_n(call):
 async def send_f(call):
     await send_audio_from_list(call, furl)
     await call.edit(reply_markup=None)
+
 
 
 
