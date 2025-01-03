@@ -321,7 +321,7 @@ active_player_id = None
 def is_user_banned(user_id):
     return user_id in banned_users
 @client.on(events.NewMessage(pattern='/start'))
-async def handle_start(event)
+async def handle_start(event):
     if is_user_banned(event.sender_id):
         sent_message = await event.reply("☝")
         await asyncio.sleep(3.5)
