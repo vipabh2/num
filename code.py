@@ -437,4 +437,13 @@ async def show_points(event):
 
 
 
-client.run_until_disconnected()
+
+if __name__ == "__main__":
+    while True:
+        try:
+            print("working...")
+            client.start()
+            client.run_until_disconnected() 
+        except Exception as e:
+            print(f"حدث خطأ: {e}")
+            time.sleep(5) 
