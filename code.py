@@ -261,11 +261,6 @@ furl = ('171', '172', '173', '174')
 
 @client.on(events.NewMessage(func=lambda event: event.text in ['لطمية', 'لطميه']))
 async def vipabh(event):
-    current_time = datetime.now()
-    message_time = datetime.fromtimestamp(event.message.date) 
-    time_difference = (current_time - message_time).total_seconds()
-    if time_difference > 20:
-        return 
     username = event.sender.username or "لا يوجد اسم مستخدم"
     markup = [
         [Button.inline("باسم", b"basim")],
