@@ -348,7 +348,8 @@ async def start_game(event):
         await asyncio.sleep(3.5)
         await client.edit_message(
             sent_message.chat_id, sent_message.id, text="عذرا , انت محظور من استخدام البوت."
-        )    
+        )
+        return
     global game_active, attempts, active_player_id
     game_active = False
     attempts = 0
@@ -370,13 +371,13 @@ async def start_new_game(event):
     if not game_active:
         number = random.randint(1, 10)
         active_player_id = event.sender_id
+        username = event.sender.username if event.sender.username else "لا يوجد اسم مستخدم"
         await event.edit_reply_markup(None)
         await event.reply(f'عزيزي [{event.sender.first_name}](t.me/@{username}) اختر أي رقم من 1 إلى 10 🌚')
         game_active = True
         attempts = 0
     else:
-        await event.reply('اللعبة قيد التشغيل، يرجى انتهاء الجولة الحالية أولاً.')
-
+        await event.reply('اللعبة قيد التشغيل، يرجى انتهاء الجولة الحالية أولاً
 
 
 
