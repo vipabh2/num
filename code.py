@@ -11,6 +11,8 @@ import asyncio
 from telethon import TelegramClient, events
 from telethon.tl.types import InputMediaPhoto
 from telethon.tl.custom import Button
+import time 
+
 #########
 api_id = os.getenv('API_ID')      
 api_hash = os.getenv('API_HASH')  
@@ -442,13 +444,15 @@ async def show_points(event):
     else:
         await event.reply("❌ ليس لديك نقاط الآن. أرسل /num لبدء اللعبة.")
 if __name__ == "__main__":
-    import time  
     while True:
         try:
+            print("✨ بدء تشغيل العميل...")
             client.start()
+            print("✅ العميل يعمل الآن!")
             client.run_until_disconnected()
         except Exception as e:
             print(f"⚠️ حدث خطأ: {e}")
             print("⏳ إعادة المحاولة بعد 5 ثوانٍ...")
             time.sleep(5)
+
 
