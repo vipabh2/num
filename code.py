@@ -350,7 +350,7 @@ async def start_game(event):
         return
     username = event.sender.username if event.sender.username else "لا يوجد اسم مستخدم"
     markup = [[Button.inline("ابدأ اللعبة", b"start_game")]]
-    await client.send_file(event.chat_id, "https://t.me/VIPABH/1204", caption=f"اهلا [{event.sender.first_name}](https://t.me/{username}) حياك الله! اضغط على الزر لبدء اللعبة.", parse_mode="Markdown", buttons=markup)
+    await event.reply(event.chat_id, "https://t.me/VIPABH/1204", caption=f"اهلا [{event.sender.first_name}](https://t.me/{username}) حياك الله! اضغط على الزر لبدء اللعبة.", parse_mode="Markdown", buttons=markup)
     
 @client.on(events.CallbackQuery(data=b"start_game"))
 async def start_new_game(event):
