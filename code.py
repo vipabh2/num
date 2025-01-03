@@ -407,7 +407,7 @@ async def handle_guess(event):
                 points = get_user_score(event.sender_id)
                 if event.sender_id not in user_points:
                     # user_points[event.sender_id] = 0
-                user_points[event.sender_id] += 1 
+                    user_points[event.sender_id] += 1 
                 await event.reply("مُبارك فزتها بفخر 🥳")
                 won = "t.me/VIPABH/2"
                 await client.send_file(event.chat_id, won)
