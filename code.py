@@ -426,8 +426,8 @@ async def handle_guess(event):
         else:
             await event.reply("اللعبة ليست نشطة حاليًا، ابدأ لعبة جديدة.")
 
-    except ValueError:
-        await event.reply("يرجى إدخال رقم صحيح")
+    # except ValueError:
+    #     await event.reply("يرجى إدخال رقم صحيح")
 
 @client.on(events.NewMessage(func=lambda event: event.text == 'النقاط'))
 async def show_points(event):
