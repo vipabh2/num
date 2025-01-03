@@ -343,13 +343,14 @@ async def handle_start(event):
     )
 @client.on(events.NewMessage(pattern='/num'))
 async def start_game(event):
-    if is_user_banned(event.sender_id):
-        sent_message = await event.reply("☝")
-        await asyncio.sleep(3.5)
-        await client.edit_message(
-            sent_message.chat_id, sent_message.id, text="عذرا , انت محظور من استخدام البوت."
+    username = event.sender.username or "unknown"
+    markup = [[Button.inline("ابدأ اللعبة", b"start_game")]]
+    await event.reply(
+        f"أهلاً [{event.sender.first_name}](https://t.me/{username})! حياك الله. اضغط على الزر لبدء اللعبة.",
+        file="https://t.me/VIPABH/1210",  
+        parse_mode="Markdown",
+        buttons=markup
         )
-        return
     global game_active, attempts, active_player_id
     game_active = False
     attempts = 0
