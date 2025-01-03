@@ -409,20 +409,18 @@ async def handle_guess(event):
             user_points[event.sender_id] += 1 
             await event.reply("مُبارك فزتها بفخر 🥳")
             won = "t.me/VIPABH/2"
-            await client.send_file(event.chat_id,(event.chat_id, won)
-                                   game_active = False
-                                              elif attempts >= max_attempts:
-                                              await event.reply(f"للأسف، لقد نفدت محاولاتك. الرقم الصحيح هو {number}.🌚")
-                                              lose = "t.me/VIPABH/23"
-                                                  await client.send_voice(event.chat_id, lose)
-                                                  game_active = False
-                                                             else:
-                                              await event.reply("جرب مرة أخرى، الرقم غلط💔")
+            await client.send_file(event.chat_id, won)
+            game_active = False
+        elif attempts >= max_attempts:
+            await event.reply(f"للأسف، لقد نفدت محاولاتك. الرقم الصحيح هو {number}.🌚")
+            lose = "t.me/VIPABH/23"
+            await client.send_file(event.chat_id, lose)
+            game_active = False
+        else:
+            await event.reply("جرب مرة أخرى، الرقم غلط💔")
     
-                                              except ValueError:
-                                              await event.reply("يرجى إدخال رقم صحيح")
-
-
+    except ValueError:
+        await event.reply("يرجى إدخال رقم صحيح")
 
 
 
