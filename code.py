@@ -437,13 +437,12 @@ async def handle_guess(event):
                     )
                 else:
                     await event.reply("❌ ليس لديك نقاط الآن. أرسل /num لبدء اللعبة.")
-
-###########################################################
-    if __name__ == "__main__":
-        while True:
-            try:
-                client.start()
-                client.run_until_disconnected() 
-            except Exception as e:
-                print(f"حدث خطأ: {e}")
-                time.sleep(5) 
+                    
+                    if __name__ == "__main__":
+                        while True:     
+                            try:
+                                client.start()
+                                client.run_until_disconnected() 
+                            except Exception as e:
+                                print(f"حدث خطأ: {e}")
+                                time.sleep(5) 
