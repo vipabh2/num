@@ -167,8 +167,7 @@ async def handle_start_game(event):
     username = event.sender.username or "unknown"
     
     if chat_id not in group_game_status:
-        group_game_status[chat_id] = {'game_active': False, 'active_player_id': None}
-    
+        group_game_status[chat_id] = {'game_active': False, 'active_player_id': None}    
     if not group_game_status[chat_id]['game_active']:
         group_game_status[chat_id]['game_active'] = True
         group_game_status[chat_id]['active_player_id'] = user_id
@@ -360,7 +359,7 @@ async def start_new_game(event):
         number = random.randint(1, 10)
         active_player_id = event.sender_id
         username = event.sender.username if event.sender.username else "لا يوجد اسم مستخدم"
-        await event.edit_reply_markup(None)
+        await event.edit(buttons=None)
         await event.reply(f'عزيزي [{event.sender.first_name}](t.me/@{username}) اختر أي رقم من 1 إلى 10 🌚')
         game_active = True
         attempts = 0
