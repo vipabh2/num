@@ -259,10 +259,11 @@ nurl = ('164', '165', '166', '167', '168', '169', '170')
 
 furl = ('171', '172', '173', '174')
 
+
 async def send_audio_from_list(call, url_list):
     rl = random.choice(url_list)
     audio_url = f"https://t.me/sossosic/{rl}"
-    await call.respond(
+    await call.message.reply(
         audio=audio_url,
         caption="᯽︙اذكر القائم",
         parse_mode="html"
@@ -310,7 +311,6 @@ async def send_n(call):
 async def send_f(call):
     await send_audio_from_list(call, furl)
     await call.edit(reply_markup=None)
-
 
 
 
