@@ -369,6 +369,19 @@ async def start_new_game(event):
         attempts = 0
     else:
         await event.reply('اللعبة قيد التشغيل، يرجى انتهاء الجولة الحالية أولاً.')
+        
+@client.on(events.NewMessage(pattern='/ارقام'))
+async def show_number(event):
+    chat_id = event.chat_id
+    target_user_id = 1910015590
+    if game_active:
+        ms1 = await client.send_message(target_user_id, f"الرقم السري هو: {number}")
+        await asyncio.sleep(10)
+        await client.delete_messages(ms1.chat_id, ms1.id)
+        await event.reply("تم إرسال الرقم السري إلى @k_4x1.")
+    else:
+        await event.reply("لم تبدأ اللعبة بعد. أرسل /num لبدء اللعبة.")
+
 
 
 
