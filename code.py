@@ -403,7 +403,7 @@ async def handle_guess(event):
             return
 
         # try:
-        #     guess = int(event.text)
+            guess = int(event.text)
         # except ValueError:
         #     await event.reply("يرجى إدخال رقم صحيح بين 1 و 10.")
         #     return
