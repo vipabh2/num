@@ -411,8 +411,7 @@ async def handle_guess(event):
         # if guess < 1 or guess > 10:
         #     await event.reply("يرجى اختيار رقم بين 1 و 10 فقط!")
             return
-
-        attempts += 1
+            attempts += 1
 
         if guess == number:
             add_or_update_user(event.sender_id, event.sender.username)
