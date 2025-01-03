@@ -326,10 +326,10 @@ async def send_random_file(event):
     #             reply_to=event.message.id
     #         )
     #     else:
-            await event.reply(
-                media=url,
-                caption="😎يسعد مسائك",
-                reply_to=event.message.id
+    await event.reply(
+        media=url,
+        caption="😎يسعد مسائك",
+        reply_to=event.message.id
             )
     except Exception as e:
         await event.reply(f"حدث خطأ أثناء إرسال الملف.{e}")
