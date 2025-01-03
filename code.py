@@ -322,13 +322,13 @@ async def send_random_file(event):
         if url in video_urls:
             await event.reply(
                 file=f"t.me/iuabh/{url}",
-                caption="😎يسعد مسائك",
+                # caption="😎يسعد مسائك",
                 reply_to=event.message.id
             )
         else:
             await event.reply(
                 file=f"t.me/iuabh/{url}",
-                caption="😎يسعد مسائك",
+                # caption="😎يسعد مسائك",
                 reply_to=event.message.id
             )
             
