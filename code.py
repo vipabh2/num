@@ -403,7 +403,6 @@ async def handle_guess(event):
         if guess == number:
             add_or_update_user(event.sender_id, event.sender.username)
             add_point_to_winner(event.sender_id)
-
             points = get_user_score(event.sender_id)
             if event.sender_id not in user_points:
                 user_points[event.sender_id] = 0  
@@ -411,17 +410,17 @@ async def handle_guess(event):
             await event.reply("مُبارك فزتها بفخر 🥳")
             won = "t.me/VIPABH/2"
             await client.send_file(event.chat_id,(event.chat_id, won)
-            game_active = False
-        elif attempts >= max_attempts:
-            await event.reply(f"للأسف، لقد نفدت محاولاتك. الرقم الصحيح هو {number}.🌚")
-            lose = "t.me/VIPABH/23"
-            await client.send_voice(event.chat_id, lose)
-            game_active = False
-        else:
-            await event.reply("جرب مرة أخرى، الرقم غلط💔")
+                                   game_active = False
+                                              elif attempts >= max_attempts:
+                                              await event.reply(f"للأسف، لقد نفدت محاولاتك. الرقم الصحيح هو {number}.🌚")
+                                              lose = "t.me/VIPABH/23"
+                                                  await client.send_voice(event.chat_id, lose)
+                                                  game_active = False
+                                                             else:
+                                              await event.reply("جرب مرة أخرى، الرقم غلط💔")
     
-    except ValueError:
-        await event.reply("يرجى إدخال رقم صحيح")
+                                              except ValueError:
+                                              await event.reply("يرجى إدخال رقم صحيح")
 
 
 
