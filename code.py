@@ -311,7 +311,7 @@ async def send_basim(call):
     await send_audio_from_list(call, furl)
     await call.edit(buttons=None)
 ###########################################
-# video_urls = [f"t.me/iuabh/{i}" for i in range(242, 256)]
+video_urls = [f"t.me/iuabh/{i}" for i in range(242, 256)]
 @client.on(events.NewMessage(func=lambda message: message.text in ['ميم', 'ميمز']))
 async def send_random_file(event):
     # await asyncio.sleep(2)
