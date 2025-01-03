@@ -351,7 +351,7 @@ async def start_game(event):
         parse_mode="Markdown",
         buttons=markup
         )
-    async def start_new_game(event):
+async def start_new_game(event):
     global game_active, number, attempts, active_player_id
     if not game_active:
         number = random.randint(1, 10)
