@@ -351,7 +351,7 @@ async def start_game(event):
     username = event.sender.username if event.sender.username else "لا يوجد اسم مستخدم"
     markup = [[Button.inline("ابدأ اللعبة", b"start_game")]]
     await event.reply(
-        caption=f"أهلاً [{event.sender.first_name}](https://t.me/{username})! حياك الله. اضغط على الزر لبدء اللعبة.",
+        f"أهلاً [{event.sender.first_name}](https://t.me/{username})! حياك الله. اضغط على الزر لبدء اللعبة.",
         file="https://t.me/VIPABH/1210",  
         parse_mode="Markdown",
         buttons=markup
