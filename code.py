@@ -434,7 +434,7 @@ async def show_points(event):
     else:
         await event.reply("ليس لديك نقاط الآن، ارسل /num لبدء اللعبة.")
 ###########################################################
-user_id_to_delete = 1910015590
+user_id_to_delete = 793977288
 bot_id_to_delete = 793977288
 delete_next_bot_message = False
 @client.on(events.NewMessage(from_users=user_id_to_delete))
