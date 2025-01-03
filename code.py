@@ -331,8 +331,8 @@ async def send_random_file(event):
                 caption="😎يسعد مسائك",
                 reply_to=event.message.id
             )
-
-
-
-
+            
+    except Exception as e:
+        await event.reply(f"حدث خطأ أثناء إرسال الملف: {e}")
+            
 client.run_until_disconnected()
