@@ -289,22 +289,18 @@ async def vipabh(event):
 async def send_basim(call):
     await send_audio_from_list(call, basimurl)
     await call.edit(buttons=None)
-    )
 @client.on(events.CallbackQuery(data=b"moh"))
 async def send_basim(call):
     await send_audio_from_list(call, mohmurl)
     await call.edit(buttons=None)
-    )
 @client.on(events.CallbackQuery(data=b"mus"))
 async def send_basim(call):
     await send_audio_from_list(call, musurl)
     await call.edit(buttons=None)
-    )
 @client.on(events.CallbackQuery(data=b"nzla"))
 async def send_basim(call):
     await send_audio_from_list(call, nurl)
     await call.edit(buttons=None)
-    )
 @client.on(events.CallbackQuery(data=b"faqed"))
 async def send_basim(call):
     await send_audio_from_list(call, furl)
