@@ -402,14 +402,14 @@ async def handle_guess(event):
             await event.reply("اللعبة ليست نشطة حاليًا، ابدأ لعبة جديدة.")
             return
 
-        try:
-            guess = int(event.text)
-        except ValueError:
-            await event.reply("يرجى إدخال رقم صحيح بين 1 و 10.")
-            return
+        # try:
+        #     guess = int(event.text)
+        # except ValueError:
+        #     await event.reply("يرجى إدخال رقم صحيح بين 1 و 10.")
+        #     return
 
-        if guess < 1 or guess > 10:
-            await event.reply("يرجى اختيار رقم بين 1 و 10 فقط!")
+        # if guess < 1 or guess > 10:
+        #     await event.reply("يرجى اختيار رقم بين 1 و 10 فقط!")
             return
 
         attempts += 1
