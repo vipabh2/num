@@ -264,10 +264,9 @@ async def send_audio_from_list(call, url_list):
     rl = random.choice(url_list)
     audio_url = f"https://t.me/sossosic/{rl}"
     await call.respond(
-        file=audio_url,
-        caption="᯽︙اذكر القائم",
-        parse_mode="html"
+        file=audio_url
     )
+
 
 @client.on(events.NewMessage(func=lambda event: event.text in ['لطمية', 'لطميه']))
 async def vipabh(event):
