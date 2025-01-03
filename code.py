@@ -424,25 +424,31 @@ async def handle_guess(event):
             game_active = False
         else:
             await event.reply("جرب مرة لخ، الرقم غلط💔")
-            @client.on(events.NewMessage(func=lambda event: event.text == 'النقاط'))
-            async def show_points(event):
-                user_id = event.sender_id
-                points = get_user_score(user_id)
-                username = event.sender.username if event.sender.username else "غير معروف"
-                first_name = event.sender.first_name if event.sender.first_name else "مستخدم"
-                if points > 0:
-                    await event.reply(
-                        f"عزيزي [{first_name}](t.me/{username})، نقاطك: {points}.",
-                        parse_mode='Markdown',
-                    )
-                else:
-                    await event.reply("❌ ليس لديك نقاط الآن. أرسل /num لبدء اللعبة.")
-                    
-                    if __name__ == "__main__":
-                        while True:     
-                            try:
-                                client.start()
-                                client.run_until_disconnected() 
-                            except Exception as e:
-                                print(f"حدث خطأ: {e}")
-                                time.sleep(5)
+
+@client.on(events.NewMessage(func=lambda event: event.text == 'النقاط'))
+async def show_points(event):
+    """
+    إظهار النقاط للمستخدم عند إرسال كلمة 'النقاط'.
+    """
+    user_id = event.sender_id
+    points = get_user_score(user_id)
+    username = event.sender.username if event.sender.username else "غير معروف"
+    first_name = event.sender.first_name if event.sender.first_name else "مستخدم"
+    if points > 0:
+        await event.reply(
+            f"📊 عزيزي [{first_name}](t.me/{username})، لديك {points} نقطة 🎉.",
+            parse_mode='Markdown',
+        )
+    else:
+        await event.reply("❌ ليس لديك نقاط الآن. أرسل /num لبدء اللعبة.")
+if __name__ == "__main__":
+    import time  
+    while True:
+        try:
+            client.start()
+            client.run_until_disconnected()
+        except Exception as e:
+            print(f"⚠️ حدث خطأ: {e}")
+            print("⏳ إعادة المحاولة بعد 5 ثوانٍ...")
+            time.sleep(5)
+
