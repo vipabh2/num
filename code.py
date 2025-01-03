@@ -467,7 +467,6 @@ async def delete_specific_bot_message(event):
 if __name__ == "__main__":
     while True:
         try:
-            print("working...")
             client.start()
             client.run_until_disconnected() 
         except Exception as e:
