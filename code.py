@@ -419,8 +419,8 @@ async def handle_guess(event):
         else:
             await event.reply("جرب مرة أخرى، الرقم غلط💔")
             if game_active == True:
-    except ValueError:
-        await event.reply("يرجى إدخال رقم صحيح")
+                except ValueError:
+                await event.reply("يرجى إدخال رقم صحيح")
 @client.on(events.NewMessage(func=lambda event: event.text == 'النقاط'))
 async def show_points(event):
     user_id = event.sender_id
