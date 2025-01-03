@@ -237,9 +237,83 @@ async def show_number(event):
     else:
         await event.reply("لم تبدأ اللعبة بعد. أرسل /rings لبدء اللعبة.")
 ############################################################
+basimurl = (
+    "50", "51", "52", "53", "54", "55", "56", "57", "58", "59",
+    "60", "61", "62", "63", "64", "65", "66", "67", "68", "69",
+    "70", "71", "72", "73", "74", "75", "76", "77", "78", "79",
+    "80", "81", "82", "83", "84", "85", "86", "87", "88", "89",
+    "90", "91", "92", "93", "94", "95", "96", "97", "98", "99",
+    "100", "101", "102", "103", "104", "105", "106", "107", "108", "109",
+    "110", "111", "112", "113", "114", "115", "116", "117", "118"
+)
+mohmurl = (
+    "119", "120", "121", "122", "123", "124", "125", "126", "127", "128",
+    "129", "130", "131", "132", "133", "134", "135", "136", "137", "138"
+)
 
+musurl = ('139', '140', '141', '142', '143', '144', '145', '146', '147',
+            '148', '149', '150', '151', '152', '153', '154'
+            )
 
+nurl = ('164', '165', '166', '167', '168', '169', '170')
 
+furl = ('171', '172', '173', '174')
+
+@client.on(events.NewMessage(func=lambda event: event.text in ['لطمية', 'لطميه']))
+async def vipabh(event):
+    current_time = datetime.now()
+    message_time = datetime.fromtimestamp(event.message.date) 
+    time_difference = (current_time - message_time).total_seconds()
+    if time_difference > 20:
+        return 
+    username = event.sender.username or "لا يوجد اسم مستخدم"
+    markup = [
+        [Button.inline("باسم", b"باسم")],
+        [Button.inline("الخاقاني", b"الخاقاني")],
+        [Button.inline("مسلم", b"مسلم")],
+        [Button.inline("نزلة", b"نزلة")],
+        [Button.inline("فاقد", b"فاقد")]
+    ]
+
+    await event.respond(
+        f"اهلا [{event.sender.first_name}](https://t.me/{username}) حياك الله! اضغط على الرادود.",
+        file="https://t.me/VIPABH/1212",
+        buttons=markup,
+        parse_mode="Markdown"
+    )
+async def send_audio_from_list(call, url_list):
+    rl = random.choice(url_list)
+    audio_url = f"https://t.me/sossosic/{rl}"
+    await call.message.reply(
+        audio=audio_url,
+        caption="᯽︙اذكر القائم",
+        parse_mode="html"
+    )
+
+@client.on(events.CallbackQuery(func=lambda call: call.data == b"باسم"))
+async def send_basim(call):
+    await send_audio_from_list(call, furl)
+    await call.edit(reply_markup=None)
+
+@client.on(events.CallbackQuery(func=lambda call: call.data == b"الخاقاني"))
+async def send_khaqani(call):
+    await send_audio_from_list(call, mohmurl)
+    await call.edit(reply_markup=None)
+
+@client.on(events.CallbackQuery(func=lambda call: call.data == b"مسلم"))
+async def send_mus(call):
+    await send_audio_from_list(call, musurl)
+    await call.edit(reply_markup=None)
+
+@client.on(events.CallbackQuery(func=lambda call: call.data == b"نزلة"))
+async def send_n(call):
+    await send_audio_from_list(call, nurl)
+    await call.edit(reply_markup=None)
+
+@client.on(events.CallbackQuery(func=lambda call: call.data == b"فاقد"))
+async def send_f(call):
+    await send_audio_from_list(call, furl)
+    await call.edit(reply_markup=None)
 
 
 
