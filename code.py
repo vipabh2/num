@@ -11,8 +11,6 @@ import asyncio
 from telethon import TelegramClient, events
 from telethon.tl.types import InputMediaPhoto
 from telethon.tl.custom import Button
-import time 
-
 #########
 api_id = os.getenv('API_ID')      
 api_hash = os.getenv('API_HASH')  
@@ -342,7 +340,6 @@ async def handle_start(event):
         "استمتع! 🎉",
         parse_mode='markdown'
     )
-
 @client.on(events.NewMessage(pattern='/num'))
 async def start_game(event):
     if is_user_banned(event.sender_id):
@@ -361,17 +358,19 @@ async def start_game(event):
 @client.on(events.CallbackQuery(data=b"start_game"))
 async def start_new_game(event):
     global game_active, number, attempts, active_player_id
-    if not game_active:
-        number = random.randint(1, 10)
-        active_player_id = event.sender_id
-        username = event.sender.username if event.sender.username else "لا يوجد اسم مستخدم"
-        await event.edit(buttons=None)
-        await event.reply(f'عزيزي [{event.sender.first_name}](t.me/@{username}) اختر أي رقم من 1 إلى 10 🌚')
-        game_active = True
-        attempts = 0
-    else:
-        await event.reply('اللعبة قيد التشغيل، يرجى انتهاء الجولة الحالية أولاً.')
-        
+    if game_active:
+        await event.reply('اللعبة قيد التشغيل حالياً، يرجى إنهاء الجولة الحالية أولاً.')
+        return
+    number = random.randint(1, 10)
+    active_player_id = event.sender_id
+    username = event.sender.username if event.sender.username else "لا يوجد اسم مستخدم"
+    await event.edit(buttons=None)
+    await event.reply(
+        f'عزيزي [{event.sender.first_name}](t.me/{username})! اختر رقمًا بين 1 و 10 🌚',
+        parse_mode="Markdown"
+    )
+    game_active = True
+    attempts = 0
 @client.on(events.NewMessage(pattern='/ارقام'))
 async def show_number(event):
     chat_id = event.chat_id
