@@ -393,34 +393,38 @@ def get_user_score(user_id):
 async def handle_guess(event):
     global game_active, number, attempts
     try:
-        guess = int(event.text)
-        if guess < 1 or guess > 10:
-            await event.reply("يرجى اختيار رقم بين 1 و 10 فقط!")
-            return
+        if game_active: 
+            guess = int(event.text)
+            if guess < 1 or guess > 10:
+                await event.reply("يرجى اختيار رقم بين 1 و 10 فقط!")
+                return
 
-        attempts += 1
+            attempts += 1
 
-        if guess == number:
-            add_or_update_user(event.sender_id, event.sender.username)
-            add_point_to_winner(event.sender_id)
-            points = get_user_score(event.sender_id)
-            if event.sender_id not in user_points:
-                user_points[event.sender_id] = 0  
-            user_points[event.sender_id] += 1 
-            await event.reply("مُبارك فزتها بفخر 🥳")
-            won = "t.me/VIPABH/2"
-            await client.send_file(event.chat_id, won)
-            game_active = False
-        elif attempts >= max_attempts:
-            await event.reply(f"للأسف، لقد نفدت محاولاتك. الرقم الصحيح هو {number}.🌚")
-            lose = "t.me/VIPABH/23"
-            await client.send_file(event.chat_id, lose)
-            game_active = False
+            if guess == number:
+                add_or_update_user(event.sender_id, event.sender.username)
+                add_point_to_winner(event.sender_id)
+                points = get_user_score(event.sender_id)
+                if event.sender_id not in user_points:
+                    user_points[event.sender_id] = 0
+                user_points[event.sender_id] += 1 
+                await event.reply("مُبارك فزتها بفخر 🥳")
+                won = "t.me/VIPABH/2"
+                await client.send_file(event.chat_id, won)
+                game_active = False
+            elif attempts >= max_attempts:
+                await event.reply(f"للأسف، لقد نفدت محاولاتك. الرقم الصحيح هو {number}.🌚")
+                lose = "t.me/VIPABH/23"
+                await client.send_voice(event.chat_id, lose)
+                game_active = False
+            else:
+                await event.reply("جرب مرة أخرى، الرقم غلط💔")
         else:
-            await event.reply("جرب مرة أخرى، الرقم غلط💔")
-            if game_active == True:
-                except ValueError:
-                await event.reply("يرجى إدخال رقم صحيح")
+            await event.reply("اللعبة ليست نشطة حاليًا، ابدأ لعبة جديدة.")
+
+    except ValueError:
+        await event.reply("يرجى إدخال رقم صحيح")
+
 @client.on(events.NewMessage(func=lambda event: event.text == 'النقاط'))
 async def show_points(event):
     user_id = event.sender_id
