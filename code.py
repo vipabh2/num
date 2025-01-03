@@ -394,7 +394,6 @@ def add_point_to_winner(user_id):
     pass
 def get_user_score(user_id):
     return user_points.get(user_id, 0)
-
 @client.on(events.NewMessage(func=lambda event: game_active and event.sender_id == active_player_id))
 async def handle_guess(event):
     global game_active, number, attempts
@@ -402,15 +401,19 @@ async def handle_guess(event):
         if not game_active:
             await event.reply("اللعبة ليست نشطة حاليًا، ابدأ لعبة جديدة.")
             return
+
         try:
             guess = int(event.text)
         except ValueError:
             await event.reply("يرجى إدخال رقم صحيح بين 1 و 10.")
             return
+
         if guess < 1 or guess > 10:
             await event.reply("يرجى اختيار رقم بين 1 و 10 فقط!")
             return
+
         attempts += 1
+
         if guess == number:
             add_or_update_user(event.sender_id, event.sender.username)
             add_point_to_winner(event.sender_id)
@@ -425,7 +428,11 @@ async def handle_guess(event):
             await client.send_voice(event.chat_id, lose)
             game_active = False
         else:
-            await event.reply("جرب مرة لخ، الرقم غلط💔")
+            await event.reply("جرب مرة أخرى، الرقم غلط💔")
+
+    except Exception as e:
+        await event.reply(f"حدث خطأ غير متوقع: {e}")
+
 
 @client.on(events.NewMessage(func=lambda event: event.text == 'النقاط'))
 async def show_points(event):
@@ -436,6 +443,7 @@ async def show_points(event):
     points = get_user_score(user_id)
     username = event.sender.username if event.sender.username else "غير معروف"
     first_name = event.sender.first_name if event.sender.first_name else "مستخدم"
+
     if points > 0:
         await event.reply(
             f"📊 عزيزي [{first_name}](t.me/{username})، لديك {points} نقطة 🎉.",
@@ -443,6 +451,7 @@ async def show_points(event):
         )
     else:
         await event.reply("❌ ليس لديك نقاط الآن. أرسل /num لبدء اللعبة.")
+
 if __name__ == "__main__":
     while True:
         try:
