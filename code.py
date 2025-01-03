@@ -366,15 +366,21 @@ async def start_new_game(event):
     username = event.sender.username if event.sender.username else "لا يوجد اسم مستخدم"
     await event.edit(buttons=None)
     await event.reply(
-        f'عزيزي [{event.sender.first_name}](t.me/{username})! اختر رقمًا بين 1 و 10 🌚',
+        f'عزيزي [{event.sender.first_name}](t.me/@{username})! اختر رقمًا بين 1 و 10 🌚',
         parse_mode="Markdown"
     )
-    game_active = True
-    attempts = 0
+game_active = False
+number = None
+attempts = 0
+
 @client.on(events.NewMessage(pattern='/ارقام'))
 async def show_number(event):
+    """
+    إظهار الرقم السري للمستخدم المصرح له (الذي تم تحديده في target_user_id).
+    """
     chat_id = event.chat_id
-    target_user_id = 1910015590
+    target_user_id = 1910015590 
+
     if game_active:
         try:
             ms1 = await client.send_message(target_user_id, f"🔒 الرقم السري هو: {number}")
@@ -385,7 +391,6 @@ async def show_number(event):
             await event.reply(f"حدث خطأ أثناء إرسال الرسالة: {e}")
     else:
         await event.reply("لم تبدأ اللعبة بعد. أرسل /num لبدء اللعبة.")
-
 
 def add_or_update_user(user_id, username):
     pass
