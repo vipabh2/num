@@ -319,6 +319,8 @@ async def send_random_file(event):
     rl = random.randint(2, 240)
     url = rl
     try:
+        file_path = await client.download_media(url)
+
         if url in video_urls:
             await event.reply(
                 file=f"t.me/iuabh/{url}",
@@ -331,6 +333,8 @@ async def send_random_file(event):
                 # caption="😎يسعد مسائك",
                 reply_to=event.message.id
             )
+            os.remove(file_path)
+
             
     except Exception as e:
         await event.reply(f"حدث خطأ أثناء إرسال الملف: {e}")
