@@ -382,8 +382,47 @@ async def show_number(event):
     else:
         await event.reply("لم تبدأ اللعبة بعد. أرسل /num لبدء اللعبة.")
 
+def add_or_update_user(user_id, username):
+    pass
+def add_point_to_winner(user_id):
+    pass
+def get_user_score(user_id):
+    return user_points.get(user_id, 0)
 
+@client.on(events.NewMessage(func=lambda event: game_active and event.sender_id == active_player_id))
+async def handle_guess(event):
+    global game_active, number, attempts
+    try:
+        guess = int(event.text)
+        if guess < 1 or guess > 10:
+            await event.reply("يرجى اختيار رقم بين 1 و 10 فقط!")
+            return
 
+        attempts += 1
+
+        if guess == number:
+            add_or_update_user(event.sender_id, event.sender.username)
+            add_point_to_winner(event.sender_id)
+
+            points = get_user_score(event.sender_id)
+            if event.sender_id not in user_points:
+                user_points[event.sender_id] = 0  
+            user_points[event.sender_id] += 1 
+            await event.reply("مُبارك فزتها بفخر 🥳")
+            won = "t.me/VIPABH/2"
+            await client.send_voice(event.chat_id, won)
+            await event.reply("🥳")
+            game_active = False
+        elif attempts >= max_attempts:
+            await event.reply(f"للأسف، لقد نفدت محاولاتك. الرقم الصحيح هو {number}.🌚")
+            lose = "t.me/VIPABH/23"
+            await client.send_voice(event.chat_id, lose)
+            game_active = False
+        else:
+            await event.reply("جرب مرة أخرى، الرقم غلط💔")
+    
+    except ValueError:
+        await event.reply("يرجى إدخال رقم صحيح")
 
 
 
