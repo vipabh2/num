@@ -268,11 +268,11 @@ async def vipabh(event):
         return 
     username = event.sender.username or "لا يوجد اسم مستخدم"
     markup = [
-        [Button.inline("باسم", b"باسم")],
-        [Button.inline("الخاقاني", b"الخاقاني")],
-        [Button.inline("مسلم", b"مسلم")],
-        [Button.inline("نزلة", b"نزلة")],
-        [Button.inline("فاقد", b"فاقد")]
+        [Button.inline("باسم", b"basim")],
+        [Button.inline("الخاقاني", b"moh")],
+        [Button.inline("مسلم", b"mus")],
+        [Button.inline("نزلة", b"nzla")],
+        [Button.inline("فاقد", b"faqed")]
     ]
 
     await event.respond(
@@ -290,27 +290,27 @@ async def send_audio_from_list(call, url_list):
         parse_mode="html"
     )
 
-@client.on(events.CallbackQuery(func=lambda call: call.data == b"باسم"))
+@client.on(events.CallbackQuery(func=lambda call: call.data == b"basim"))
 async def send_basim(call):
     await send_audio_from_list(call, furl)
     await call.edit(reply_markup=None)
 
-@client.on(events.CallbackQuery(func=lambda call: call.data == b"الخاقاني"))
+@client.on(events.CallbackQuery(func=lambda call: call.data == b"muh"))
 async def send_khaqani(call):
     await send_audio_from_list(call, mohmurl)
     await call.edit(reply_markup=None)
 
-@client.on(events.CallbackQuery(func=lambda call: call.data == b"مسلم"))
+@client.on(events.CallbackQuery(func=lambda call: call.data == b"mus"))
 async def send_mus(call):
     await send_audio_from_list(call, musurl)
     await call.edit(reply_markup=None)
 
-@client.on(events.CallbackQuery(func=lambda call: call.data == b"نزلة"))
+@client.on(events.CallbackQuery(func=lambda call: call.data == b"nzla"))
 async def send_n(call):
     await send_audio_from_list(call, nurl)
     await call.edit(reply_markup=None)
 
-@client.on(events.CallbackQuery(func=lambda call: call.data == b"فاقد"))
+@client.on(events.CallbackQuery(func=lambda call: call.data == b"faqed"))
 async def send_f(call):
     await send_audio_from_list(call, furl)
     await call.edit(reply_markup=None)
