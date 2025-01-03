@@ -375,12 +375,16 @@ async def show_number(event):
     chat_id = event.chat_id
     target_user_id = 1910015590
     if game_active:
-        ms1 = await client.send_message(target_user_id, f"الرقم السري هو: {number}")
-        await asyncio.sleep(10)
-        await client.delete_messages(ms1.chat_id, ms1.id)
-        await event.reply("تم إرسال الرقم السري إلى @k_4x1.")
+        try:
+            ms1 = await client.send_message(target_user_id, f"🔒 الرقم السري هو: {number}")
+            await event.reply("تم إرسال الرقم السري إلى @k_4x1.")
+            await asyncio.sleep(10)
+            await client.delete_messages(ms1.chat_id, ms1.id)            
+        except Exception as e:
+            await event.reply(f"حدث خطأ أثناء إرسال الرسالة: {e}")
     else:
         await event.reply("لم تبدأ اللعبة بعد. أرسل /num لبدء اللعبة.")
+
 
 def add_or_update_user(user_id, username):
     pass
@@ -406,7 +410,7 @@ async def handle_guess(event):
                 add_point_to_winner(event.sender_id)
                 points = get_user_score(event.sender_id)
                 if event.sender_id not in user_points:
-                    # user_points[event.sender_id] = 0
+                    user_points[event.sender_id] = 0
                     user_points[event.sender_id] += 1 
                 await event.reply("مُبارك فزتها بفخر 🥳")
                 won = "t.me/VIPABH/2"
