@@ -406,7 +406,7 @@ async def handle_guess(event):
                 add_point_to_winner(event.sender_id)
                 points = get_user_score(event.sender_id)
                 if event.sender_id not in user_points:
-                    user_points[event.sender_id] = 0
+                    # user_points[event.sender_id] = 0
                 user_points[event.sender_id] += 1 
                 await event.reply("مُبارك فزتها بفخر 🥳")
                 won = "t.me/VIPABH/2"
@@ -434,30 +434,6 @@ async def show_points(event):
     else:
         await event.reply("ليس لديك نقاط الآن، ارسل /num لبدء اللعبة.")
 ###########################################################
-user_id_to_delete = 793977288
-bot_id_to_delete = 793977288
-delete_next_bot_message = False
-@client.on(events.NewMessage(from_users=user_id_to_delete))
-async def handle_user_command(event):
-    global delete_next_bot_message 
-    if "/send" in event.raw_text:
-        try:
-            delete_next_bot_message = True
-            await client.delete_messages(event.chat_id, event.message.id)
-            print(f"تم استقبال الأمر '/send' من المستخدم {user_id_to_delete} وتم تفعيل حالة الحذف.")
-        except Exception as e:
-            print(f"حدث خطأ أثناء محاولة حذف الرسالة: {e}")
-
-@client.on(events.NewMessage(from_users=bot_id_to_delete))
-async def delete_specific_bot_message(event):
-    global delete_next_bot_message 
-    if delete_next_bot_message: 
-        try:
-            await client.delete_messages(event.chat_id, event.message.id)
-            delete_next_bot_message = False 
-            print(f"تم حذف رسالة البوت {bot_id_to_delete} بعد الأمر '/send'.")
-        except Exception as e:
-            print(f"حدث خطأ أثناء محاولة حذف رسالة البوت: {e}")
 
 
 
