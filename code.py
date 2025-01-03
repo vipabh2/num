@@ -366,14 +366,14 @@ async def start_new_game(event):
 
 
     
-    global game_active, attempts, active_player_id
-    game_active = False
-    attempts = 0
-    active_player_id = None
-    username = event.sender.username if event.sender.username else "لا يوجد اسم مستخدم"
-    markup = [
-        [Button.inline("ابدأ اللعبة", b"start_game")]
-    ]
+    # global game_active, attempts, active_player_id
+    # game_active = False
+    # attempts = 0
+    # active_player_id = None
+    # username = event.sender.username if event.sender.username else "لا يوجد اسم مستخدم"
+    # markup = [
+    #     [Button.inline("ابدأ اللعبة", b"start_game")]
+    # ]
 # @client.on(events.CallbackQuery(data=b"start_game"))
 # async def start_new_game(event):
 #     global game_active, number, attempts, active_player_id
