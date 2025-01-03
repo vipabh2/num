@@ -360,7 +360,7 @@ async def start_game(event):
     ]
     await event.reply(
         f"اهلا [{event.sender.first_name}](https://t.me/{username}) حياك الله! اضغط على الزر لبدء اللعبة.",
-        video="https://t.me/VIPABH/1204",
+        File="https://t.me/VIPABH/1204",
         caption="اهلا بك! اضغط على الزر لبدء اللعبة.",
         parse_mode="Markdown",
         buttons=markup
