@@ -411,7 +411,6 @@ async def handle_guess(event):
             await event.reply("مُبارك فزتها بفخر 🥳")
             won = "t.me/VIPABH/2"
             await client.send_file(event.chat_id,(event.chat_id, won)
-            await event.reply("🥳")
             game_active = False
         elif attempts >= max_attempts:
             await event.reply(f"للأسف، لقد نفدت محاولاتك. الرقم الصحيح هو {number}.🌚")
