@@ -352,7 +352,7 @@ async def start_game(event):
     markup = [[Button.inline("ابدأ اللعبة", b"start_game")]]
     await event.reply(
         f"أهلاً [{event.sender.first_name}](https://t.me/{username})! حياك الله. اضغط على الزر لبدء اللعبة.",
-        file="https://t.me/VIPABH/1210",  
+        file="https://t.me/VIPABH/1204",  
         parse_mode="Markdown",
         buttons=markup
     )    
