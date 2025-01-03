@@ -285,11 +285,10 @@ async def vipabh(event):
         buttons=markup,
         parse_mode="Markdown"
     )
-
-@client.on(events.CallbackQuery(func=lambda call: call.data == b"basim"))
+@client.on(events.CallbackQuery(data=b"basim"))
 async def send_basim(call):
     await send_audio_from_list(call, furl)
-    await call.edit(reply_markup=None)
+    await call.edit(buttons=None)
 
 @client.on(events.CallbackQuery(func=lambda call: call.data == b"moh"))
 async def send_khaqani(call):
