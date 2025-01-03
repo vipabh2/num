@@ -421,7 +421,14 @@ async def handle_guess(event):
     
     except ValueError:
         await event.reply("يرجى إدخال رقم صحيح")
-
+@client.on(events.NewMessage(func=lambda event: event.text == 'النقاط'))
+async def show_points(event):
+    user_id = event.sender_id
+    points = get_user_score(user_id)
+    if points > 0:
+        await event.reply(f"عزيزي [{event.sender.first_name}](t.me/{event.sender.username}) نقاطك: {points}", parse_mode='Markdown')
+    else:
+        await event.reply("ليس لديك نقاط الآن، ارسل /num لبدء اللعبة.")
 
 
 
