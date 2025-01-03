@@ -402,7 +402,7 @@ async def handle_guess(event):
             await event.reply("اللعبة ليست نشطة حاليًا، ابدأ لعبة جديدة.")
             return
 
-        # try:
+        try:
             guess = int(event.text)
         # except ValueError:
         #     await event.reply("يرجى إدخال رقم صحيح بين 1 و 10.")
@@ -430,8 +430,8 @@ async def handle_guess(event):
         else:
             await event.reply("جرب مرة أخرى، الرقم غلط💔")
 
-    except Exception as e:
-        await event.reply(f"حدث خطأ غير متوقع: {e}")
+    # except Exception as e:
+    #     await event.reply(f"حدث خطأ غير متوقع: {e}")
 
 
 @client.on(events.NewMessage(func=lambda event: event.text == 'النقاط'))
