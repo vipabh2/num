@@ -6,7 +6,11 @@ import random
 import time
 from datetime import datetime
 import os
+import random
 import asyncio
+from telethon import TelegramClient, events
+from telethon.tl.types import InputMediaPhoto
+from telethon.tl.custom import Button
 #########
 api_id = os.getenv('API_ID')      
 api_hash = os.getenv('API_HASH')  
@@ -313,6 +317,7 @@ async def send_random_file(event):
     await asyncio.sleep(2)
     rl = random.randint(2, 255)
     url = f"t.me/iuabh/{rl}"
+
     try:
         if url in video_urls:
             await event.reply(
@@ -328,6 +333,7 @@ async def send_random_file(event):
             )
     except Exception as e:
         await event.reply("حدث خطأ أثناء إرسال الملف.")
+
 
 
 
