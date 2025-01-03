@@ -455,9 +455,9 @@ async def show_points(event):
 if __name__ == "__main__":
     while True:
         try:
-            print("✨ بدء تشغيل العميل...")
+            # print("✨ بدء تشغيل العميل...")
             client.start()
-            print("✅ العميل يعمل الآن!")
+            # print("✅ العميل يعمل الآن!")
             client.run_until_disconnected()
         except Exception as e:
             print(f"⚠️ حدث خطأ: {e}")
