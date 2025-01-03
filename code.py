@@ -377,7 +377,7 @@ async def start_new_game(event):
         game_active = True
         attempts = 0
     else:
-        await event.reply('اللعبة قيد التشغيل، يرجى انتهاء الجولة الحالية أولاً
+        await event.reply('اللعبة قيد التشغيل، يرجى انتهاء الجولة الحالية أولاً')
 
 
 
