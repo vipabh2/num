@@ -410,7 +410,7 @@ async def handle_guess(event):
             user_points[event.sender_id] += 1 
             await event.reply("مُبارك فزتها بفخر 🥳")
             won = "t.me/VIPABH/2"
-            await client.send_voice(event.chat_id, won)
+            await client.send_File(event.chat_id, won)
             await event.reply("🥳")
             game_active = False
         elif attempts >= max_attempts:
