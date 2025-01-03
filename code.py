@@ -311,24 +311,35 @@ async def send_basim(call):
     await send_audio_from_list(call, furl)
     await call.edit(buttons=None)
 ###########################################
-mem_folder = 'links/mem'
-video_urls = [f"{i}.mp4" for i in range(1, 15)]
-@client.on(events.NewMessage(func=lambda message: message.text in ['ميم', 'ميمز']))
-async def send_random_file(event):
-    await asyncio.sleep(2)
-    rl = random.randint(1, 14)
-    file_name = f"{rl}.MP4" 
-    file_path = os.path.join(mem_folder, file_name)
-    try:
-        if os.path.exists(file_path):
-            await event.reply(
-                file=file_path,
-                caption="😎يسعد مسائك",
-                reply_to=event.message.id
-            )
-        else:
-            await event.reply("الملف غير موجود في المجلد.")
-    except Exception as e:
-        await event.reply(f"حدث خطأ أثناء إرسال الملف: {e}")
+user_points = {}
+banned_users = []
+game_active = False
+number = None
+max_attempts = 3
+attempts = 0
+active_player_id = None
+def is_user_banned(user_id):
+    return user_id in banned_users
+@client.on(events.NewMessage(pattern='/start'))
+async def handle_start(event)
+    if is_user_banned(event.sender_id):
+        sent_message = await event.reply("☝")
+        await asyncio.sleep(3.5)
+        await client.edit_message(
+            sent_message.chat_id, sent_message.id, text="عذرا , انت محظور من استخدام البوت."
+        )
+        return
+    await event.reply(
+        "أهلاً حياك الله! \n"
+        "• أرسل `ميم` او `ميمز` للميمز. \n"
+        "• أرسل `لطمية` ل ارسال لطمية \n"
+        "• أرسل /num لبدء لعبة الأرقام.\n"
+        "• أرسل `كتويت` لبدء أسئلة الكتتويت. \n"
+        "• أرسل `ابحث عن` لعمل بحث في ويكيبيديا \n"
+        "• أرسل `النقاط` ل رؤية نقاطك في لعبة /num \n"
+        "• أرسل `ابحث عام` يعمل بحث لكن ليس دقيق ب 3 نتائج \n\n"
+        "استمتع! 🎉",
+        parse_mode='markdown'
+    )
             
 client.run_until_disconnected()
