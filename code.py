@@ -393,8 +393,7 @@ def add_or_update_user(user_id, username):
 def add_point_to_winner(user_id):
     pass
 def get_user_score(user_id):
-    return user_points.get(user_id, 0)
-@client.on(events.NewMessage(func=lambda event: game_active and event.sender_id == active_player_id))
+    return user_points.get(user_id, 0)@client.on(events.NewMessage(func=lambda event: game_active and event.sender_id == active_player_id))
 async def handle_guess(event):
     global game_active, number, attempts
     if not game_active:
@@ -418,8 +417,9 @@ async def handle_guess(event):
         add_point_to_winner(event.sender_id)
         points = get_user_score(event.sender_id)
         await event.reply(f"🎉 مُبارك! لقد فزت! نقاطك الآن: {points}.")
+        
         won = "t.me/VIPABH/2"
-        await client.send_file(event.chat_id, won)
+        await event.reply(f"🎉 فزت! شاهد النتيجة هنا: {won}")
         game_active = False
     elif attempts >= max_attempts:
         await event.reply(f"للأسف، لقد نفدت محاولاتك. الرقم الصحيح هو {number}.")
@@ -428,6 +428,7 @@ async def handle_guess(event):
         game_active = False
     else:
         await event.reply("جرب مرة أخرى، الرقم غلط💔")
+
 
 
 @client.on(events.NewMessage(func=lambda event: event.text == 'النقاط'))
