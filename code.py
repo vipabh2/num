@@ -311,31 +311,23 @@ async def send_basim(call):
     await send_audio_from_list(call, furl)
     await call.edit(buttons=None)
 ###########################################
-video_urls = [f"t.me/iuabh/{i}" for i in range(242, 256)]
+mem_folder = 'links/mem'
+video_urls = [f"{i}.mp4" for i in range(1, 15)]
 @client.on(events.NewMessage(func=lambda message: message.text in ['ميم', 'ميمز']))
 async def send_random_file(event):
-    # await asyncio.sleep(2)
-    # rl = random.randint(2, 255)
-    rl = random.randint(2, 240)
-    url = rl
+    await asyncio.sleep(2)
+    rl = random.randint(1, 14)
+    file_name = f"{rl}.mp4"  # افترض أن الفيديوهات بتنسيق .mp4
+    file_path = os.path.join(mem_folder, file_name)
     try:
-        file_path = await client.download_media(url)
-
-        if url in video_urls:
+        if os.path.exists(file_path):
             await event.reply(
-                file=f"t.me/iuabh/{url}",
-                # caption="😎يسعد مسائك",
+                file=file_path,
+                caption="😎يسعد مسائك",
                 reply_to=event.message.id
             )
         else:
-            await event.reply(
-                file=f"t.me/iuabh/{url}",
-                # caption="😎يسعد مسائك",
-                reply_to=event.message.id
-            )
-            os.remove(file_path)
-
-            
+            await event.reply("الملف غير موجود في المجلد.")
     except Exception as e:
         await event.reply(f"حدث خطأ أثناء إرسال الملف: {e}")
             
