@@ -1,51 +1,69 @@
 from telethon import TelegramClient, events
 from telethon.tl.types import ChatBannedRights
-from telethon.tl.functions.channels import GetParticipantRequest
 import os
 api_id = os.getenv('API_ID')      
 api_hash = os.getenv('API_HASH')  
 bot_token = os.getenv('BOT_TOKEN') 
 client = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
 
-restricted_users = [] 
-unmute_permissions = ChatBannedRights(until_date=None, send_messages=False) 
+# قائمة المستخدمين المقيدين
+restricted_users = []
 
+# إعداد صلاحيات إلغاء التقييد
+unmute_permissions = ChatBannedRights(until_date=None, send_messages=None)
+
+# --- أمر كتم المستخدم ---
+@client.on(events.NewMessage(pattern="/كتم"))
+async def mute_user(event):
+    if event.is_group:
+        if not event.reply_to_msg_id:
+            await event.reply("⌔ يجب الرد على رسالة المستخدم الذي تريد كتمه.")
+            return
+        reply_message = await event.get_reply_message()
+        user = await client.get_entity(reply_message.sender_id)
+
+        # إضافة المستخدم إلى قائمة المقيدين
+        restricted_users.append(user.id)
+
+        # كتم المستخدم
+        await client.edit_permissions(
+            event.chat_id,
+            user.id,
+            send_messages=False
+        )
+        await event.reply(f"✅ ¦ تم كتم المستخدم بنجاح\n{user.mention}")
+
+# --- أمر مسح المقيدين ---
 @client.on(events.NewMessage(pattern="/مسح_المقيدين"))
-async def unmute(event):
-    global restricted_users
-    user_id = event.sender_id
-    chat_id = event.chat_id
-
-    participant = await client(GetParticipantRequest(chat_id, user_id))
-    if (
-        participant.participant.admin_rights
-        or participant.participant.rank
-        or user_id in [5675627801, 5651614955]
-    ):
-        count = len(restricted_users)
-
-        for user in restricted_users:
-            await client.edit_permissions(chat_id, user.id, send_messages=True)
-
-        restricted_users = []  # إعادة تعيين القائمة
-        await event.reply(f"↢ تم مسح {count} من المقيدين")
-    else:
-        await event.reply(f"حجي هذا الامر ليس لك \n༄")
-
-@client.on(events.NewMessage(pattern="المق"))
-async def get_restr_users(event):
+async def unmute_users(event):
     global restricted_users
     count = len(restricted_users)
 
+    # إلغاء التقييد لجميع المستخدمين في القائمة
+    for user_id in restricted_users:
+        await client.edit_permissions(
+            event.chat_id,
+            user_id,
+            send_messages=True
+        )
+    restricted_users.clear()  # مسح القائمة
+    await event.reply(f"↢ تم مسح {count} من المقيدين")
+
+# --- أمر عرض قائمة المقيدين ---
+@client.on(events.NewMessage(pattern="/المقيدين"))
+async def get_restricted_users(event):
+    global restricted_users
+    count = len(restricted_users)
+
+    # التحقق إذا كانت القائمة فارغة
     if count == 0:
-        await event.reply("لا يوجد مستخدمين مقيدين.")
+        await event.reply("⌔ لا يوجد مستخدمون مقيدون.")
         return
 
-    user_ids = [str(user.id) for user in restricted_users]
-    response = f"قائمة المقيدين وعددهم: {count}\n"
-    response += "⭓ᴍᴜˢɪᴄ✘ᴠᴇɢᴀ♪\n"
-    response += "\n".join(f"{i+1}. {user_id}" for i, user_id in enumerate(user_ids))
-
+    # إعداد الرد
+    user_list = "\n".join([f"- {user_id}" for user_id in restricted_users])
+    response = f"⌔ قائمة المقيدين وعددهم: {count}\n\n{user_list}"
     await event.reply(response)
 
+# تشغيل البوت
 client.run_until_disconnected()
