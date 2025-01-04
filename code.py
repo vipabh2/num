@@ -9,7 +9,6 @@ restricted_users = []
 mutttof = []
 unmute_permissions = ChatBannedRights(until_date=None, send_messages=None)
 mute_permissions = ChatBannedRights(until_date=None, send_messages=False)
-
 @client.on(events.NewMessage(pattern="المق"))
 async def list_restricted_users(event):
     global restricted_users
@@ -31,11 +30,11 @@ async def list_restricted_users(event):
                     mention = f"[{user.first_name}](https://t.me/{user.username})"
                 else:
                     mention = f"[{user.first_name}](tg://user?id={user.id})"
-                response += f"{i}- {mention}\n"
+                response += f"{i}- {mention} ({user.id})\n"
             else:
                 continue
         except Exception as e:
-            response += f"{i}- [مستخدم مجهول](tg://user?id={user_id})\n"
+            response += f"{i}- [مستخدم مجهول](tg://user?id={user_id}) ({user_id})\n"
 
     restricted_users = updated_restricted_users
 
@@ -43,9 +42,8 @@ async def list_restricted_users(event):
         await event.reply(response, parse_mode="md")
     else:
         await event.reply("⌔ لا يوجد أي مستخدمين مقيدين حاليًا.")
-    
-client.run_until_disconnected()
 
+    
 
 
 
@@ -92,5 +90,6 @@ async def mute_user(event):
         await event.reply(f"✅ ¦ تم تقيد المستخدم بنجاح: {mention}", parse_mode="md")
     else:
         await event.reply("⌔ ليس لديك صلاحيات لتنفيذ هذا الأمر.")
+
 
 client.run_until_disconnected()
