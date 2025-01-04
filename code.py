@@ -35,32 +35,32 @@ user_ban_times = {}
 #         print(f"Error occurred while updating user ban: {e}")
 
 
-# async def get_users_without_write_permission(event):
-#     try:
-#         group_username = event.chat_id
+async def get_users_without_write_permission(event):
+    try:
+        group_username = event.chat_id
 
-#         participants = await client(GetParticipantsRequest(
-#             channel=group_username,
-#             filter=ChannelParticipantsBanned(q=""),
-#             offset=0,
-#             limit=100,
-#             hash=0
-#         ))
+        participants = await client(GetParticipantsRequest(
+            channel=group_username,
+            filter=ChannelParticipantsBanned(q=""),
+            offset=0,
+            limit=100,
+            hash=0
+        ))
 
-#         if not participants.users:
-#             await event.reply("لا يوجد مستخدمون محظورون في هذه المجموعة.")
-#             return
+        if not participants.users:
+            await event.reply("لا يوجد مستخدمون محظورون في هذه المجموعة.")
+            return
 
-#         for user in participants.users:
-#             mention = f"[@{user.username}](https://t.me/@{user.username})" if user.username else f"[{user.first_name}](tg://user?id={user.id})"
-#             ban_info = user_ban_times.get(user.id, {"ban_time": "غير معروف", "first_name": "غير معروف"})
-#             ban_time = ban_info["ban_time"]
-#             # print(ban_info)
+        for user in participants.users:
+            mention = f"[@{user.username}](https://t.me/@{user.username})" if user.username else f"[{user.first_name}](tg://user?id={user.id})"
+            ban_info = user_ban_times.get(user.id, {"ban_time": "غير معروف", "first_name": "غير معروف"})
+            ban_time = ban_info["ban_time"]
+            # print(ban_info)
 
-#             first_name = ban_info["first_name"]
-#             await event.reply(f"User: {first_name} - {mention}\nBanned Time: {ban_time}", parse_mode="md")
-#     except Exception as e:
-#         print(f"Error occurred while getting banned users: {e}")
+            first_name = ban_info["first_name"]
+            await event.reply(f"User: {first_name} - {mention}\nBanned Time: {ban_time}", parse_mode="md")
+    except Exception as e:
+        print(f"Error occurred while getting banned users: {e}")
 
         
 # تنفيذ أمر "/get_banned"
