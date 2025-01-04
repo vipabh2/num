@@ -7,7 +7,6 @@ api_hash = os.getenv('API_HASH')
 bot_token = os.getenv('BOT_TOKEN')
 
 client = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
-
 @client.on(events.NewMessage(pattern="تق"))
 async def mute_user(event):
     if not event.is_group:
@@ -18,10 +17,6 @@ async def mute_user(event):
     user_status = await client.get_permissions(event.chat_id, sender.id)
 
     if user_status.is_admin or sender.id == 5089553588:
-        if event.chat_id in mutttof:
-            await event.reply("⌔ التقييد غير مفعل في هذه المجموعة.")
-            return
-
         if not event.reply_to_msg_id:
             await event.reply("⌔ يجب الرد على رسالة المستخدم الذي تريد تقيده.")
             return
@@ -35,8 +30,8 @@ async def mute_user(event):
 
         await client.edit_permissions(event.chat_id, user_to_restrict.id, send_messages=False)
 
-        # إضافة المستخدم إلى قاعدة البيانات
-        add_restricted_user(user_to_restrict.id, event.chat_id, user_to_restrict.username, user_to_restrict.first_name, 'سبب التقييد')
+        # إضافة المستخدم إلى قاعدة البيانات أو قائمة المقيدين
+        # add_restricted_user(user_to_restrict.id, event.chat_id, user_to_restrict.username, user_to_restrict.first_name, 'سبب التقييد')
 
         mention = f"[@{user_to_restrict.username}](https://t.me/{user_to_restrict.username})" if user_to_restrict.username else f"[{user_to_restrict.first_name}](tg://user?id={user_to_restrict.id})"
         await event.reply(f"✅ ¦ تم تقيد المستخدم بنجاح: {mention}", parse_mode="md")
