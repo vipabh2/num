@@ -3,34 +3,43 @@ from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.types import ChannelParticipantsBanned
 import os
 
+# جلب بيانات البوت من المتغيرات البيئية
 api_id = os.getenv('API_ID')
 api_hash = os.getenv('API_HASH')
 bot_token = os.getenv('BOT_TOKEN')
 
+# إنشاء العميل الأساسي
 client = TelegramClient('bot', api_id, api_hash).start(bot_token=bot_token)
 
 async def get_users_without_write_permission(event):
-    group_username = event.chat_id 
+    group_username = event.chat_id  # الحصول على معرف المجموعة من الحدث
+
+    # جلب المشاركين المحظورين فقط باستخدام العميل الأساسي
     participants = await client(GetParticipantsRequest(
         channel=group_username,
-        filter=ChannelParticipantsBanned(q=""), 
+        filter=ChannelParticipantsBanned(q=""),  # تمرير سلسلة فارغة كاستعلام
         offset=0,
-        limit=100,
+        limit=100,  # جلب أول 100 مستخدم محظور
         hash=0
     ))
 
+    # إذا لم يكن هناك مشاركون محظورون
     if not participants.users:
         await event.reply("لا يوجد مستخدمون محظورون في هذه المجموعة.")
         return
-        mention = f"[@{user_to_restrict.username}](https://t.me/{user_to_restrict.username})" if user_to_restrict.username else f"[{user_to_restrict.first_name}](tg://user?id={user_to_restrict.id})"
 
+    # إرسال النتائج لكل المستخدمين المحظورين
     for user in participants.users:
+        # إذا كان المستخدم لديه اسم مستخدم، استخدمه في المذكرة
+        mention = f"[@{user.username}](https://t.me/{user.username})" if user.username else f"[{user.first_name}](tg://user?id={user.id})"
         await event.reply(f"User: {user.id} - {mention}", parse_mode="md")
 
+# تشغيل الكود عبر حدث
 from telethon import events
 
-@client.on(events.NewMessage(pattern='/get_banned')) 
+@client.on(events.NewMessage(pattern='/get_banned'))  # تشغيل الكود عند كتابة الأمر /get_banned
 async def handle_event(event):
     await get_users_without_write_permission(event)
 
+# إبقاء البوت قيد التشغيل
 client.run_until_disconnected()
