@@ -5,7 +5,7 @@ api_id = os.getenv('API_ID')
 api_hash = os.getenv('API_HASH')  
 bot_token = os.getenv('BOT_TOKEN') 
 client = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
-
+restricted_users = [await client.get_permissions(event.chat_id, user_id)]
 @client.on(events.NewMessage(pattern="المقيدين"))
 async def list_restricted_users(event):
     global restricted_users
