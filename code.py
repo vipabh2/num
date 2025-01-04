@@ -7,6 +7,9 @@ bot_token = os.getenv('BOT_TOKEN')
 
 client = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
 
+# تعريف mutttof كقائمة للمجموعات التي يتم تفعيل التقييد فيها
+mutttof = []
+
 restricted_users = []
 
 @client.on(events.NewMessage(pattern="تق"))
