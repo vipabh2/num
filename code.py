@@ -32,7 +32,16 @@ async def get_users_without_write_permission(event):
     for user in participants.users:
         # إذا كان للمستخدم اسم مستخدم
         mention = f"[@{user.username}](https://t.me/@{user.username})" if user.username else f"[{user.first_name}](tg://user?id={user.id})"
-        await event.reply(f"User: {user.id} - {mention}", parse_mode="md")
+        
+        # استخراج وقت الحظر (في حالة وجوده)
+        ban_time = user.banned_until if user.banned_until else "لا يوجد وقت محدد للحظر"
+        
+        # تنسيق وقت الحظر إلى تنسيق قابل للقراءة
+        if ban_time != "لا يوجد وقت محدد للحظر":
+            ban_time = ban_time.strftime("%Y-%m-%d %H:%M:%S")  # تنسيق الوقت بشكل مناسب
+
+        await event.reply(f"User: {user.id} - {mention}\nTime Banned: {ban_time}", parse_mode="md")
+
 # تشغيل الكود عبر حدث
 from telethon import events
 
