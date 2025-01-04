@@ -34,7 +34,7 @@ async def user_update_handler(event):
     except Exception as e:
         # في حالة حدوث أي خطأ، نرسل إشعارًا للمشرفين
         error_message = f"حدث خطأ أثناء محاولة تقييد المستخدم {event.user_id}: {str(e)}"
-        group_username = 'ID_OF_ADMIN_OR_GROUP'  # قم بتغييرها إلى معرّف المجموعة أو المشرفين
+        group_username = '1002219196756'  # قم بتغييرها إلى معرّف المجموعة أو المشرفين
         await client.send_message(group_username, error_message)
         print(f"Error: {str(e)}")  # طباعة الخطأ في السجل
 
