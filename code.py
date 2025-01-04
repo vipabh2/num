@@ -1,5 +1,4 @@
 from telethon import TelegramClient, events
-from telethon.tl.types import ChatActionUserRestricted
 import os
 import logging
 from datetime import datetime
@@ -18,13 +17,14 @@ logger = logging.getLogger(__name__)
 @client.on(events.ChatAction)
 async def handler(event):
     try:
-        # تحقق من إذا كان الحدث هو "تقييد" (مستخدم تم تقييده)
-        if isinstance(event.action, ChatActionUserRestricted):
-            user_id = event.user.id  # استخراج ID المستخدم
+        # التحقق إذا كان الإجراء هو "تقييد"
+        if event.user_id and event.action == "restricted":
+            user_id = event.user_id
+            # الحصول على اسم المستخدم إذا كان موجودًا
             user = await client.get_entity(user_id)
             username = user.username if user.username else user.first_name
-            ban_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")  # حفظ وقت الحظر
-
+            ban_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
+            
             # طباعة البيانات لتتبعها
             print(f"User ID: {user_id}")
             print(f"Username: {username}")
