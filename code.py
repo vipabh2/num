@@ -25,11 +25,11 @@ async def user_update_handler(event):
         # يمكن تغيير هذه الرسالة لتتناسب مع أسلوبك
         ban_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
         ban_message = f"تم تقييد المستخدم {user_id} في {ban_time}."
-
-        # إرسال إشعار في نفس المجموعة أو إلى مشرفين (يمكن تخصيص ذلك هنا)
-        group_username = event.chat_id
-        await client.send_message(group_username, ban_message)
         
+        # إرسال إشعار إلى نفس المجموعة أو المشرفين (تأكد من تغيير هذا إلى معرّف المجموعة الفعلي)
+        group_username = event.chat_id  # استخدم معرف المجموعة المناسبة
+        await client.send_message(group_username, ban_message)
+
         # حفظ وقت الحظر (إذا أردت حفظه لاستخدامات لاحقة)
         user_ban_times[user_id] = ban_time
 
