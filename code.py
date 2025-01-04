@@ -17,7 +17,7 @@ async def get_users_without_write_permission(event):
     # جلب المشاركين المحظورين فقط باستخدام العميل الأساسي
     participants = await client(GetParticipantsRequest(
         channel=group_username,
-        filter=ChannelParticipantsBanned(),  # فقط المحظورين
+        filter=ChannelParticipantsBanned(q=None),  # تحديد الفلتر بشكل صحيح
         offset=0,
         limit=100,  # جلب أول 100 مستخدم محظور
         hash=0
