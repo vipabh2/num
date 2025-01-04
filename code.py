@@ -1,4 +1,5 @@
 from telethon import TelegramClient, events
+from telethon.tl.types import ChatActionUserRestricted
 import os
 import logging
 from datetime import datetime
@@ -17,26 +18,31 @@ logger = logging.getLogger(__name__)
 @client.on(events.ChatAction)
 async def handler(event):
     try:
-        # التحقق إذا كان الإجراء هو "تقييد"
-        if event.action == 'restricted':
-            user_id = event.user_id
-            # الحصول على اسم المستخدم إذا كان موجودًا
+        # تحقق من إذا كان الحدث هو "تقييد" (مستخدم تم تقييده)
+        if isinstance(event.action, ChatActionUserRestricted):
+            user_id = event.user.id  # استخراج ID المستخدم
             user = await client.get_entity(user_id)
             username = user.username if user.username else user.first_name
-            print(username)
-            ban_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
-            print(ban_time)
+            ban_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")  # حفظ وقت الحظر
+
+            # طباعة البيانات لتتبعها
+            print(f"User ID: {user_id}")
+            print(f"Username: {username}")
+            print(f"Ban Time: {ban_time}")
+
+            # تسجيل البيانات في السجل
             logger.info(f"تم تقييد المستخدم {username} (ID: {user_id}) في {ban_time}")
-            
-            group_username = event.chat_id  # معرّف المجموعة
-            print(group_username)
+
+            # إرسال رسالة إلى نفس المجموعة التي تم فيها التقييد
+            group_username = event.chat_id
             ban_message = f"تم تقييد المستخدم {username} (ID: {user_id}) في {ban_time}."
-            print(ban_message)
+            print(f"Sending message to group {group_username}: {ban_message}")
             await client.send_message(group_username, ban_message)
     
     except Exception as e:
         # تسجيل الأخطاء في السجل
-        logger.error(f"حدث خطأ: {str(e)}")
+        logger.error(f"حدث خطأ أثناء تنفيذ الإجراء: {str(e)}")
+        print(f"Error: {str(e)}")  # طباعة الخطأ
 
 # إبقاء البوت قيد التشغيل
 client.run_until_disconnected()
