@@ -9,7 +9,8 @@ restricted_users = []
 mutttof = []
 unmute_permissions = ChatBannedRights(until_date=None, send_messages=None)
 mute_permissions = ChatBannedRights(until_date=None, send_messages=False)
-@client.on(events.NewMessage(pattern="المقيدين"))
+
+@client.on(events.NewMessage(pattern="المق"))
 async def list_restricted_users(event):
     global restricted_users
 
@@ -17,17 +18,13 @@ async def list_restricted_users(event):
         await event.reply("⌔ هذا الأمر يعمل فقط في المجموعات.")
         return
 
-    if not restricted_users:
-        await event.reply("⌔ لا يوجد أي مستخدمين مقيدين حاليًا.")
-        return
-
     response = "⌔ قائمة المقيدين:\n\n"
-    updated_restricted_users = [] 
+    updated_restricted_users = []
 
     for i, user_id in enumerate(restricted_users, 1):
         try:
             permissions = await client.get_permissions(event.chat_id, user_id)
-            if not permissions.send_messages:  # إذا كان المستخدم لا يزال مقيدًا
+            if not permissions.send_messages:
                 updated_restricted_users.append(user_id)
                 user = await client.get_entity(user_id)
                 if user.username:
@@ -46,8 +43,8 @@ async def list_restricted_users(event):
         await event.reply(response, parse_mode="md")
     else:
         await event.reply("⌔ لا يوجد أي مستخدمين مقيدين حاليًا.")
-
-
+    
+client.run_until_disconnected()
 
 
 
