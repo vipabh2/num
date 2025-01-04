@@ -23,14 +23,15 @@ async def handler(event):
             # الحصول على اسم المستخدم إذا كان موجودًا
             user = await client.get_entity(user_id)
             username = user.username if user.username else user.first_name
-            # الوقت الحالي عند تقييد المستخدم
+            print(username)
             ban_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
-            # سجل الحدث في السجل (log)
+            print(ban_time)
             logger.info(f"تم تقييد المستخدم {username} (ID: {user_id}) في {ban_time}")
             
-            # إرسال إشعار إلى نفس المجموعة أو إلى المشرفين (يمكن تخصيصه)
             group_username = event.chat_id  # معرّف المجموعة
+            print(group_username)
             ban_message = f"تم تقييد المستخدم {username} (ID: {user_id}) في {ban_time}."
+            print(ban_message)
             await client.send_message(group_username, ban_message)
     
     except Exception as e:
