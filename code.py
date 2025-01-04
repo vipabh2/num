@@ -11,9 +11,11 @@ client = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
 # تعريف restricted_users كقائمة فارغة في البداية
 restricted_users = []  # قائمة المستخدمين المقيدين (ستكون محدثة عند تنفيذ الأوامر)
 
+
 @client.on(events.NewMessage(pattern="المقيدين"))
 async def list_restricted_users(event):
     global restricted_users  # التأكد من أن المتغير عالمي
+
     # التأكد من أن الحدث جاء من مجموعة
     if not event.is_group:
         await event.reply("⌔ هذا الأمر يعمل فقط في المجموعات.")
@@ -21,7 +23,7 @@ async def list_restricted_users(event):
 
     # قائمة للإجابة
     response = "⌔ قائمة المقيدين:\n\n"
-    updated_restricted_users = []
+    updated_restricted_users = []  # قائمة محدثة للمستخدمين المقيدين
 
     # التمرير عبر قائمة المستخدمين المقيدين
     for i, user_id in enumerate(restricted_users, 1):
@@ -47,6 +49,7 @@ async def list_restricted_users(event):
         except Exception as e:
             # إذا كان هناك خطأ أو لا يمكن الوصول للمستخدم
             response += f"{i}- [مستخدم مجهول](tg://user?id={user_id}) ({user_id})\n"
+            print(f"Error: {e}")
 
     # تحديث قائمة المقيدين
     restricted_users = updated_restricted_users
@@ -60,3 +63,4 @@ async def list_restricted_users(event):
 # قم بتشغيل العميل
 client.start()
 client.run_until_disconnected()
+التعديلات والشرح:
