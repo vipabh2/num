@@ -33,12 +33,18 @@ async def get_users_without_write_permission(event):
         # إذا كان للمستخدم اسم مستخدم
         mention = f"[@{user.username}](https://t.me/@{user.username})" if user.username else f"[{user.first_name}](tg://user?id={user.id})"
         
+        # نبحث في المشاركين المحظورين للحصول على وقت الحظر
+        banned_until = None
+        for banned_user in participants.banned:
+            if banned_user.user_id == user.id:
+                banned_until = banned_user.date
+                break
+
         # استخراج وقت الحظر (في حالة وجوده)
-        ban_time = user.banned_until if user.banned_until else "لا يوجد وقت محدد للحظر"
-        
-        # تنسيق وقت الحظر إلى تنسيق قابل للقراءة
-        if ban_time != "لا يوجد وقت محدد للحظر":
-            ban_time = ban_time.strftime("%Y-%m-%d %H:%M:%S")  # تنسيق الوقت بشكل مناسب
+        if banned_until:
+            ban_time = banned_until.strftime("%Y-%m-%d %H:%M:%S")  # تنسيق الوقت بشكل مناسب
+        else:
+            ban_time = "لا يوجد وقت محدد للحظر"
 
         await event.reply(f"User: {user.id} - {mention}\nTime Banned: {ban_time}", parse_mode="md")
 
