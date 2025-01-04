@@ -6,7 +6,6 @@ api_hash = os.getenv('API_HASH')
 bot_token = os.getenv('BOT_TOKEN') 
 client = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
 
-restricted_users = []
 @client.on(events.NewMessage(pattern="المقيدين"))
 async def list_restricted_users(event):
     global restricted_users
@@ -34,5 +33,5 @@ async def list_restricted_users(event):
 
     await event.reply(response, parse_mode="md")
 
-client.start()
+# تشغيل البوت
 client.run_until_disconnected()
