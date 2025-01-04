@@ -58,7 +58,12 @@ async def mute_user(event):
 
         restricted_users.append(user_to_restrict.id)
 
-        await event.reply(f"✅ ¦ تم تقيد المستخدم بنجاح: {user_to_restrict.mention}")
+if user_to_restrict.username:
+    mention = f"[@{user_to_restrict.username}](tg://user?id={user_to_restrict.id})"
+else:
+    mention = f"[{user_to_restrict.first_name}](tg://user?id={user_to_restrict.id})"
+
+await event.reply(f"✅ ¦ تم تقيد المستخدم بنجاح: {mention}", parse_mode="md")
     else:
         await event.reply("⌔ ليس لديك صلاحيات لتنفيذ هذا الأمر.")
 
