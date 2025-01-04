@@ -13,7 +13,7 @@ client = TelegramClient('bot', api_id, api_hash).start(bot_token=bot_token)
 
 user_ban_times = {}
 
-@client.on(events.UserUpdate)
+@client.on(events.ChatAction)
 async def user_update_handler(event):
     try:
         if event.user_id and event.is_banned:
