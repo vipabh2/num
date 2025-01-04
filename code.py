@@ -23,7 +23,7 @@ async def user_update_handler(event):
         if event.user_id and event.is_banned:
             user_id = event.user_id
             ban_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
-            print(ban_info)
+            print(ban_time)
 
             user_ban_times[user_id] = ban_time  # حفظ وقت الحظر
             print(user_ban_times)
@@ -55,7 +55,7 @@ async def get_users_without_write_permission(event):
             mention = f"[@{user.username}](https://t.me/@{user.username})" if user.username else f"[{user.first_name}](tg://user?id={user.id})"
             ban_info = user_ban_times.get(user.id, {"ban_time": "غير معروف", "first_name": "غير معروف"})
             ban_time = ban_info["ban_time"]
-            print(ban_info)
+            # print(ban_info)
 
             first_name = ban_info["first_name"]
             await event.reply(f"User: {first_name} - {mention}\nBanned Time: {ban_time}", parse_mode="md")
