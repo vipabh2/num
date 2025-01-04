@@ -1,34 +1,41 @@
-from telethon.sync import TelegramClient
-from telethon.tl.functions.channels import GetParticipantsRequest
-from telethon.tl.types import ChannelParticipantsBanned
-from telethon import events
+from telethon import TelegramClient, events
 import os
+import logging
 from datetime import datetime
 
+# جلب بيانات البوت من المتغيرات البيئية
 api_id = os.getenv('API_ID')
 api_hash = os.getenv('API_HASH')
 bot_token = os.getenv('BOT_TOKEN')
 
 client = TelegramClient('bot', api_id, api_hash).start(bot_token=bot_token)
 
-user_ban_times = {}
+# إعداد السجل (logger)
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 @client.on(events.ChatAction)
-async def user_update_handler(event):
+async def handler(event):
     try:
-        if event.user_id and event.is_banned:
+        # التحقق إذا كان الإجراء هو "تقييد"
+        if event.action == 'restricted':
             user_id = event.user_id
+            # الحصول على اسم المستخدم إذا كان موجودًا
+            user = await client.get_entity(user_id)
+            username = user.username if user.username else user.first_name
+            # الوقت الحالي عند تقييد المستخدم
             ban_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
-            print(ban_time)
-
-            user_ban_times[user_id] = ban_time 
-            print(user_ban_times)
-
-            if hasattr(event, 'chat_id'):
-                group_username = event.chat_id 
-                await client.send_message(group_username, f"تم تقييد المستخدم {user_id} في {ban_time}.")
+            # سجل الحدث في السجل (log)
+            logger.info(f"تم تقييد المستخدم {username} (ID: {user_id}) في {ban_time}")
+            
+            # إرسال إشعار إلى نفس المجموعة أو إلى المشرفين (يمكن تخصيصه)
+            group_username = event.chat_id  # معرّف المجموعة
+            ban_message = f"تم تقييد المستخدم {username} (ID: {user_id}) في {ban_time}."
+            await client.send_message(group_username, ban_message)
+    
     except Exception as e:
-        print(f"Error occurred while updating user ban: {e}")
+        # تسجيل الأخطاء في السجل
+        logger.error(f"حدث خطأ: {str(e)}")
 
-
+# إبقاء البوت قيد التشغيل
 client.run_until_disconnected()
