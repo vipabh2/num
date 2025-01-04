@@ -19,61 +19,80 @@ user_ban_times = {}
 # حدث لكشف التقييد
 @client.on(events.UserUpdate)
 async def user_update_handler(event):
-    if event.user_id and event.is_banned:
-        # إذا كان المستخدم قد تم تقييده، نرسل إشعارًا
-        user_id = event.user_id
-        # يمكن تغيير هذه الرسالة لتتناسب مع أسلوبك
-        ban_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
-        ban_message = f"تم تقييد المستخدم {user_id} في {ban_time}."
-        
-        # استخراج معرّف المجموعة من الحدث (إذا تم التقييد داخل مجموعة معينة)
-        # ملاحظة: في حالة `UserUpdate` قد لا يتوفر `event.chat_id`
-        # يمكن حل هذه المشكلة عن طريق مراقبة التفاعل داخل مجموعة ما (استخدام حدث NewMessage)
-        if hasattr(event, 'chat_id'):
-            group_username = event.chat_id  # إذا كان event يحتوي على معرّف المجموعة
-            await client.send_message(group_username, ban_message)
+    try:
+        if event.user_id and event.is_banned:
+            # إذا كان المستخدم قد تم تقييده، نرسل إشعارًا
+            user_id = event.user_id
+            # يمكن تغيير هذه الرسالة لتتناسب مع أسلوبك
+            ban_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
+            ban_message = f"تم تقييد المستخدم {user_id} في {ban_time}."
+            
+            # استخراج معرّف المجموعة من الحدث (إذا تم التقييد داخل مجموعة معينة)
+            if hasattr(event, 'chat_id'):
+                group_username = event.chat_id  # إذا كان event يحتوي على معرّف المجموعة
+                await client.send_message(group_username, ban_message)
 
-        # حفظ وقت الحظر (إذا أردت حفظه لاستخدامات لاحقة)
-        user_ban_times[user_id] = ban_time
+            # حفظ وقت الحظر (إذا أردت حفظه لاستخدامات لاحقة)
+            user_ban_times[user_id] = ban_time
+    except Exception as e:
+        # في حالة حدوث أي خطأ، نرسل إشعارًا للمشرف
+        error_message = f"حدث خطأ أثناء محاولة تقييد المستخدم {event.user_id}: {str(e)}"
+        group_username = 'ID_OF_ADMIN_OR_GROUP'  # قم بتغييرها إلى معرّف المجموعة أو المشرفين
+        await client.send_message(group_username, error_message)
+        print(f"Error: {str(e)}")  # طباعة الخطأ في السجل
 
 async def get_users_without_write_permission(event):
-    group_username = event.chat_id  # الحصول على معرف المجموعة من الحدث
+    try:
+        group_username = event.chat_id  # الحصول على معرف المجموعة من الحدث
 
-    # جلب المشاركين المحظورين فقط باستخدام العميل الأساسي
-    participants = await client(GetParticipantsRequest(
-        channel=group_username,
-        filter=ChannelParticipantsBanned(q=""),  # استخدم قيمة فارغة بدلاً من None
-        offset=0,
-        limit=100,  # جلب أول 100 مستخدم محظور
-        hash=0
-    ))
+        # جلب المشاركين المحظورين فقط باستخدام العميل الأساسي
+        participants = await client(GetParticipantsRequest(
+            channel=group_username,
+            filter=ChannelParticipantsBanned(q=""),  # استخدم قيمة فارغة بدلاً من None
+            offset=0,
+            limit=100,  # جلب أول 100 مستخدم محظور
+            hash=0
+        ))
 
-    # إذا لم يكن هناك مشاركون محظورون
-    if not participants.users:
-        await event.reply("لا يوجد مستخدمون محظورون في هذه المجموعة.")
-        return
+        # إذا لم يكن هناك مشاركون محظورون
+        if not participants.users:
+            await event.reply("لا يوجد مستخدمون محظورون في هذه المجموعة.")
+            return
 
-    # إرسال النتائج للمستخدم الذي أرسل الأمر
-    for user in participants.users:
-        # إذا كان للمستخدم اسم مستخدم
-        mention = f"[@{user.username}](https://t.me/@{user.username})" if user.username else f"[{user.first_name}](tg://user?id={user.id})"
-        
-        # نبحث عن وقت الحظر الفعلي من خلال `banned_until`
-        banned_user = next((b for b in participants.users if b.id == user.id), None)
-        
-        if banned_user and hasattr(banned_user, 'banned_until') and banned_user.banned_until:
-            # حفظ تاريخ ووقت الحظر عند التقييد
-            user_ban_times[user.id] = banned_user.banned_until.strftime("%Y-%m-%d %I:%M:%S %p")  # حفظ تاريخ ووقت الحظر بتنسيق 12 ساعة
-            ban_time = user_ban_times[user.id]  # استخدام الوقت المحفوظ
-        else:
-            ban_time = "لا يوجد وقت محدد للحظر"
+        # إرسال النتائج للمستخدم الذي أرسل الأمر
+        for user in participants.users:
+            # إذا كان للمستخدم اسم مستخدم
+            mention = f"[@{user.username}](https://t.me/@{user.username})" if user.username else f"[{user.first_name}](tg://user?id={user.id})"
+            
+            # نبحث عن وقت الحظر الفعلي من خلال `banned_until`
+            banned_user = next((b for b in participants.users if b.id == user.id), None)
+            
+            if banned_user and hasattr(banned_user, 'banned_until') and banned_user.banned_until:
+                # حفظ تاريخ ووقت الحظر عند التقييد
+                user_ban_times[user.id] = banned_user.banned_until.strftime("%Y-%m-%d %I:%M:%S %p")  # حفظ تاريخ ووقت الحظر بتنسيق 12 ساعة
+                ban_time = user_ban_times[user.id]  # استخدام الوقت المحفوظ
+            else:
+                ban_time = "لا يوجد وقت محدد للحظر"
 
-        await event.reply(f"User: {user.id} - {mention}\nBanned Time: {ban_time}", parse_mode="md")
+            await event.reply(f"User: {user.id} - {mention}\nBanned Time: {ban_time}", parse_mode="md")
+    except Exception as e:
+        # إرسال إشعار في حالة حدوث أي خطأ أثناء جلب المشاركين المحظورين
+        error_message = f"حدث خطأ أثناء جلب المشاركين المحظورين: {str(e)}"
+        group_username = 'ID_OF_ADMIN_OR_GROUP'  # قم بتغييرها إلى معرّف المجموعة أو المشرفين
+        await client.send_message(group_username, error_message)
+        print(f"Error: {str(e)}")  # طباعة الخطأ في السجل
 
 # تشغيل الكود عبر حدث
 @client.on(events.NewMessage(pattern='/get_banned'))  # تشغيل الكود عند كتابة الأمر /get_banned
 async def handle_event(event):
-    await get_users_without_write_permission(event)
+    try:
+        await get_users_without_write_permission(event)
+    except Exception as e:
+        # إرسال إشعار في حالة حدوث خطأ عند تنفيذ الأمر
+        error_message = f"حدث خطأ أثناء تنفيذ أمر /get_banned: {str(e)}"
+        group_username = 'ID_OF_ADMIN_OR_GROUP'  # قم بتغييرها إلى معرّف المجموعة أو المشرفين
+        await client.send_message(group_username, error_message)
+        print(f"Error: {str(e)}")  # طباعة الخطأ في السجل
 
 # إبقاء البوت قيد التشغيل
 client.run_until_disconnected()
