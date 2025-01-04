@@ -13,7 +13,6 @@ client = TelegramClient('bot', api_id, api_hash).start(bot_token=bot_token)
 
 user_ban_times = {}
 
-حدث لكشف التقييد
 @client.on(events.UserUpdate)
 async def user_update_handler(event):
     try:
