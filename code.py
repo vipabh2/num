@@ -9,7 +9,7 @@ restricted_users = []
 mutttof = []
 unmute_permissions = ChatBannedRights(until_date=None, send_messages=None)
 mute_permissions = ChatBannedRights(until_date=None, send_messages=False)
-@client.on(events.NewMessage(pattern="المق"))
+@client.on(events.NewMessage(pattern="المقيدين"))
 async def list_restricted_users(event):
     global restricted_users
 
@@ -22,19 +22,32 @@ async def list_restricted_users(event):
         return
 
     response = "⌔ قائمة المقيدين:\n\n"
+    updated_restricted_users = [] 
+
     for i, user_id in enumerate(restricted_users, 1):
         try:
-            user = await client.get_entity(user_id)
-            if user.username:
-                mention = f"[{user.first_name}](https://t.me/@{user.username}), user.id "
+            permissions = await client.get_permissions(event.chat_id, user_id)
+            if not permissions.send_messages:  # إذا كان المستخدم لا يزال مقيدًا
+                updated_restricted_users.append(user_id)
+                user = await client.get_entity(user_id)
+                if user.username:
+                    mention = f"[{user.first_name}](https://t.me/{user.username})"
+                else:
+                    mention = f"[{user.first_name}](tg://user?id={user.id})"
+                response += f"{i}- {mention}\n"
             else:
-                mention = f"[{user.first_name}](tg://@user?id={user.id})"
-
-            response += f"{i}- {mention}\n"
+                continue
         except Exception as e:
             response += f"{i}- [مستخدم مجهول](tg://user?id={user_id})\n"
 
-    await event.reply(response, parse_mode="md")
+    restricted_users = updated_restricted_users
+
+    if updated_restricted_users:
+        await event.reply(response, parse_mode="md")
+    else:
+        await event.reply("⌔ لا يوجد أي مستخدمين مقيدين حاليًا.")
+
+
 
 
 
