@@ -17,7 +17,7 @@ async def get_users_without_write_permission(event):
     # جلب المشاركين المحظورين فقط باستخدام العميل الأساسي
     participants = await client(GetParticipantsRequest(
         channel=group_username,
-        filter=ChannelParticipantsBanned(q=""),  # قيمة فارغة للـ q بدلاً من None
+        filter=ChannelParticipantsBanned(q=""),  # استخدم قيمة فارغة بدلاً من None
         offset=0,
         limit=100,  # جلب أول 100 مستخدم محظور
         hash=0
@@ -33,13 +33,12 @@ async def get_users_without_write_permission(event):
         # إذا كان للمستخدم اسم مستخدم
         mention = f"[@{user.username}](https://t.me/@{user.username})" if user.username else f"[{user.first_name}](tg://user?id={user.id})"
         
-        # نبحث عن وقت الحظر (وقت الحظر هو وقت الحظر الفعلي في تاريخ الحظر)
+        # نبحث عن وقت الحظر الفعلي من خلال `banned_until`
         banned_user = next((b for b in participants.users if b.id == user.id), None)
 
-        # إذا كان هناك وقت حظر فعلي (ليس المدة) من خلال `banned_until`
-        if banned_user:
-            # إذا كان الحظر دائمًا أو مؤقتًا (المستخدم محظور لوقت محدد)
-            ban_time = banned_user.date.strftime("%Y-%m-%d %H:%M:%S")  # وقت الحظر الفعلي
+        # إذا كان هناك وقت حظر فعلي (موجود في banned_until)
+        if banned_user and hasattr(banned_user, 'banned_until') and banned_user.banned_until:
+            ban_time = banned_user.banned_until.strftime("%Y-%m-%d %H:%M:%S")  # وقت الحظر الفعلي
         else:
             ban_time = "لا يوجد وقت محدد للحظر"
 
