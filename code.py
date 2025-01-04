@@ -12,6 +12,9 @@ bot_token = os.getenv('BOT_TOKEN')
 # إنشاء العميل الأساسي
 client = TelegramClient('bot', api_id, api_hash).start(bot_token=bot_token)
 
+# متغير لحفظ وقت الحظر
+user_ban_times = {}
+
 async def get_users_without_write_permission(event):
     group_username = event.chat_id  # الحصول على معرف المجموعة من الحدث
 
@@ -38,13 +41,13 @@ async def get_users_without_write_permission(event):
         banned_user = next((b for b in participants.users if b.id == user.id), None)
         
         if banned_user and hasattr(banned_user, 'banned_until') and banned_user.banned_until:
-            ban_time = banned_user.banned_until.strftime("%I:%M:%S %p")  # تنسيق الساعة 12
-            ban_date = banned_user.banned_until.strftime("%Y-%m-%d")  # تاريخ الحظر
+            # حفظ تاريخ ووقت الحظر عند التقييد
+            user_ban_times[user.id] = banned_user.banned_until.strftime("%Y-%m-%d %I:%M:%S %p")  # حفظ تاريخ ووقت الحظر بتنسيق 12 ساعة
+            ban_time = user_ban_times[user.id]  # استخدام الوقت المحفوظ
         else:
             ban_time = "لا يوجد وقت محدد للحظر"
-            ban_date = "لا يوجد تاريخ للحظر"
 
-        await event.reply(f"User: {user.id} - {mention}\nBanned Date: {ban_date}\nBanned Time: {ban_time}", parse_mode="md")
+        await event.reply(f"User: {user.id} - {mention}\nBanned Time: {ban_time}", parse_mode="md")
 
 # تشغيل الكود عبر حدث
 from telethon import events
