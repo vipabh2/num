@@ -23,7 +23,12 @@ async def get_users_without_write_permission(event):
         hash=0
     ))
 
-    # طباعة النتائج
+    # إذا لم يكن هناك مشاركون محظورون
+    if not participants.users:
+        await event.reply("لا يوجد مستخدمون محظورون في هذه المجموعة.")
+        return
+
+    # طباعة النتائج لكل المستخدمين المحظورين
     for user in participants.users:
         await event.reply(f"User: {user.id} - {user.username} - {user.first_name}")
 
