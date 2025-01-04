@@ -63,4 +63,3 @@ async def list_restricted_users(event):
 # قم بتشغيل العميل
 client.start()
 client.run_until_disconnected()
-التعديلات والشرح:
