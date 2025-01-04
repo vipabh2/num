@@ -7,10 +7,13 @@ bot_token = os.getenv('BOT_TOKEN')
 client = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
 
 
+
+# تعريف restricted_users كقائمة فارغة في البداية
 restricted_users = []  # قائمة المستخدمين المقيدين (ستكون محدثة عند تنفيذ الأوامر)
 
 @client.on(events.NewMessage(pattern="المقيدين"))
 async def list_restricted_users(event):
+    global restricted_users  # التأكد من أن المتغير عالمي
     # التأكد من أن الحدث جاء من مجموعة
     if not event.is_group:
         await event.reply("⌔ هذا الأمر يعمل فقط في المجموعات.")
