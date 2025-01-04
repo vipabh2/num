@@ -9,7 +9,7 @@ restricted_users = []
 mutttof = []
 unmute_permissions = ChatBannedRights(until_date=None, send_messages=None)
 mute_permissions = ChatBannedRights(until_date=None, send_messages=False)
-@client.on(events.NewMessage(pattern="المقيدين"))
+@client.on(events.NewMessage(pattern="المق"))
 async def list_restricted_users(event):
     global restricted_users
 
@@ -26,9 +26,9 @@ async def list_restricted_users(event):
         try:
             user = await client.get_entity(user_id)
             if user.username:
-                mention = f"[{user.first_name}](https://t.me/{user.username})"
+                mention = f"[{user.first_name}](https://t.me/@{user.username}), user.id "
             else:
-                mention = f"[{user.first_name}](tg://user?id={user.id})"
+                mention = f"[{user.first_name}](tg://@user?id={user.id})"
 
             response += f"{i}- {mention}\n"
         except Exception as e:
