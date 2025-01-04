@@ -25,7 +25,7 @@ async def get_users_without_write_permission(event):
 
     # طباعة النتائج
     for user in participants.users:
-        await reply_to(f"User: {user.id} - {user.username} - {user.first_name}")
+        await event.reply(f"User: {user.id} - {user.username} - {user.first_name}")
 
 # تشغيل الكود عبر حدث
 from telethon import events
