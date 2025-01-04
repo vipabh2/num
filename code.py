@@ -26,9 +26,12 @@ async def user_update_handler(event):
         ban_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
         ban_message = f"تم تقييد المستخدم {user_id} في {ban_time}."
         
-        # إرسال إشعار إلى نفس المجموعة أو المشرفين (تأكد من تغيير هذا إلى معرّف المجموعة الفعلي)
-        group_username = event.chat_id  # استخدم معرف المجموعة المناسبة
-        await client.send_message(group_username, ban_message)
+        # استخراج معرّف المجموعة من الحدث (إذا تم التقييد داخل مجموعة معينة)
+        # ملاحظة: في حالة `UserUpdate` قد لا يتوفر `event.chat_id`
+        # يمكن حل هذه المشكلة عن طريق مراقبة التفاعل داخل مجموعة ما (استخدام حدث NewMessage)
+        if hasattr(event, 'chat_id'):
+            group_username = event.chat_id  # إذا كان event يحتوي على معرّف المجموعة
+            await client.send_message(group_username, ban_message)
 
         # حفظ وقت الحظر (إذا أردت حفظه لاستخدامات لاحقة)
         user_ban_times[user_id] = ban_time
