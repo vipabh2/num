@@ -42,15 +42,16 @@ async def user_update_handler(event):
         group_username = 'ID_OF_ADMIN_OR_GROUP'
         await client.send_message(group_username, error_message)
         print(f"Error: {str(e)}")  # طباعة الخطأ في السجل
-        async def get_users_without_write_permission(event):   
-            try:
-                group_username = event.chat_id  # الحصول على معرف المجموعة من الحدث
-                participants = await client(GetParticipantsRequest(
-                    channel=group_username,
-                    filter=ChannelParticipantsBanned(q=""),
-                    offset=0,
-                    limit=100,
-                    hash=0
+
+async def get_users_without_write_permission(event):   
+    try:
+        group_username = event.chat_id  # الحصول على معرف المجموعة من الحدث
+        participants = await client(GetParticipantsRequest(
+            channel=group_username,
+            filter=ChannelParticipantsBanned(q=""),
+            offset=0,
+            limit=100,
+            hash=0
         ))
                 
         if not participants.users:
