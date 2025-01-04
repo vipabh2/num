@@ -1,6 +1,7 @@
 from telethon.sync import TelegramClient
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.types import ChannelParticipantsBanned
+from telethon import events
 import os
 from datetime import datetime
 
@@ -14,6 +15,23 @@ client = TelegramClient('bot', api_id, api_hash).start(bot_token=bot_token)
 
 # متغير لحفظ وقت الحظر
 user_ban_times = {}
+
+# حدث لكشف التقييد
+@client.on(events.UserUpdate)
+async def user_update_handler(event):
+    if event.user_id and event.is_banned:
+        # إذا كان المستخدم قد تم تقييده، نرسل إشعارًا
+        user_id = event.user_id
+        # يمكن تغيير هذه الرسالة لتتناسب مع أسلوبك
+        ban_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
+        ban_message = f"تم تقييد المستخدم {user_id} في {ban_time}."
+
+        # إرسال إشعار في نفس المجموعة أو إلى مشرفين (يمكن تخصيص ذلك هنا)
+        group_username = event.chat_id
+        await client.send_message(group_username, ban_message)
+        
+        # حفظ وقت الحظر (إذا أردت حفظه لاستخدامات لاحقة)
+        user_ban_times[user_id] = ban_time
 
 async def get_users_without_write_permission(event):
     group_username = event.chat_id  # الحصول على معرف المجموعة من الحدث
@@ -50,8 +68,6 @@ async def get_users_without_write_permission(event):
         await event.reply(f"User: {user.id} - {mention}\nBanned Time: {ban_time}", parse_mode="md")
 
 # تشغيل الكود عبر حدث
-from telethon import events
-
 @client.on(events.NewMessage(pattern='/get_banned'))  # تشغيل الكود عند كتابة الأمر /get_banned
 async def handle_event(event):
     await get_users_without_write_permission(event)
