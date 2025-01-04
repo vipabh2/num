@@ -1,21 +1,15 @@
 from telethon import TelegramClient, events
+from db import add_restricted_user, get_restricted_users  # استيراد وظائف قاعدة البيانات
 import os
 
-api_id = os.getenv('API_ID')      
-api_hash = os.getenv('API_HASH')  
-bot_token = os.getenv('BOT_TOKEN') 
+api_id = os.getenv('API_ID')
+api_hash = os.getenv('API_HASH')
+bot_token = os.getenv('BOT_TOKEN')
 
 client = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
 
-# تعريف mutttof كقائمة للمجموعات التي يتم تفعيل التقييد فيها
-mutttof = []
-
-restricted_users = []
-
 @client.on(events.NewMessage(pattern="تق"))
 async def mute_user(event):
-    global restricted_users
-
     if not event.is_group:
         await event.reply("⌔ هذا الأمر يعمل فقط في المجموعات.")
         return
@@ -39,47 +33,33 @@ async def mute_user(event):
             await event.reply("⌔ عذرًا، لا يمكنك تقيد المطور.")
             return
 
-        await client.edit_permissions(
-            event.chat_id,
-            user_to_restrict.id,
-            send_messages=False
-        )
+        await client.edit_permissions(event.chat_id, user_to_restrict.id, send_messages=False)
 
-        restricted_users.append(user_to_restrict.id)
+        # إضافة المستخدم إلى قاعدة البيانات
+        add_restricted_user(user_to_restrict.id, event.chat_id, user_to_restrict.username, user_to_restrict.first_name, 'سبب التقييد')
 
-        if user_to_restrict.username:
-            mention = f"[@{user_to_restrict.username}](https://t.me/{user_to_restrict.username})"
-        else:
-            mention = f"[{user_to_restrict.first_name}](tg://user?id={user_to_restrict.id})"
-
+        mention = f"[@{user_to_restrict.username}](https://t.me/{user_to_restrict.username})" if user_to_restrict.username else f"[{user_to_restrict.first_name}](tg://user?id={user_to_restrict.id})"
         await event.reply(f"✅ ¦ تم تقيد المستخدم بنجاح: {mention}", parse_mode="md")
     else:
         await event.reply("⌔ ليس لديك صلاحيات لتنفيذ هذا الأمر.")
 
 @client.on(events.NewMessage(pattern="المقيدين"))
 async def list_restricted_users(event):
-    global restricted_users
-
     if not event.is_group:
         await event.reply("⌔ هذا الأمر يعمل فقط في المجموعات.")
         return
+
+    # استرجاع المقيدين من قاعدة البيانات
+    restricted_users = get_restricted_users()
 
     if not restricted_users:
         await event.reply("⌔ لا يوجد أي مستخدمين مقيدين حاليًا.")
         return
 
     response = "⌔ قائمة المقيدين:\n\n"
-    for i, user_id in enumerate(restricted_users, 1):
-        try:
-            user = await client.get_entity(user_id)
-            if user.username:
-                mention = f"[{user.first_name}](https://t.me/{user.username})"
-            else:
-                mention = f"[{user.first_name}](tg://user?id={user.id})"
-
-            response += f"{i}- {mention} ({user.id})\n"
-        except Exception as e:
-            response += f"{i}- [مستخدم مجهول](tg://user?id={user_id})\n"
+    for i, user in enumerate(restricted_users, 1):
+        mention = f"[{user[1]}](https://t.me/{user[1]})" if user[1] else f"[{user[2]}](tg://user?id={user[0]})"
+        response += f"{i}- {mention} ({user[0]})\n"
 
     await event.reply(response, parse_mode="md")
 
