@@ -32,8 +32,7 @@ async def get_users_without_write_permission(event):
     for user in participants.users:
         # إذا كان للمستخدم اسم مستخدم
         mention = f"[@{user.username}](https://t.me/{user.username})" if user.username else f"[{user.first_name}](tg://user?id={user.id})"
-        await client.send_message(event.sender_id, f"User: {user.id} - {mention}", parse_mode="md")
-
+        await event.reply(f"User: {user.id} - {mention}", parse_mode="md")
 # تشغيل الكود عبر حدث
 from telethon import events
 
