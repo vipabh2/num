@@ -43,6 +43,7 @@ async def user_update_handler(event):
         await client.send_message(group_username, error_message)
         print(f"Error: {str(e)}")  # طباعة الخطأ في السجل
         async def get_users_without_write_permission(event):
+            
     try:
         group_username = event.chat_id  # الحصول على معرف المجموعة من الحدث
         participants = await client(GetParticipantsRequest(
