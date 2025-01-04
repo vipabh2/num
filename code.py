@@ -2,7 +2,7 @@ from telethon.sync import TelegramClient
 from telethon.tl.functions.channels import GetParticipantsRequest
 from telethon.tl.types import ChannelParticipantsBanned
 import os
-from datetime import datetime  # تأكد من استيراد datetime
+from datetime import datetime
 
 # جلب بيانات البوت من المتغيرات البيئية
 api_id = os.getenv('API_ID')
@@ -36,14 +36,15 @@ async def get_users_without_write_permission(event):
         
         # نبحث عن وقت الحظر الفعلي من خلال `banned_until`
         banned_user = next((b for b in participants.users if b.id == user.id), None)
-        current_time = datetime.now()  # الحصول على الوقت الحالي
+        
         if banned_user and hasattr(banned_user, 'banned_until') and banned_user.banned_until:
-            ban_time = banned_user.banned_until.strftime("%Y-%m-%d %H:%M:%S")  # وقت الحظر الفعلي
+            ban_time = banned_user.banned_until.strftime("%I:%M:%S %p")  # تنسيق الساعة 12
+            ban_date = banned_user.banned_until.strftime("%Y-%m-%d")  # تاريخ الحظر
         else:
             ban_time = "لا يوجد وقت محدد للحظر"
+            ban_date = "لا يوجد تاريخ للحظر"
 
-        # طباعة الوقت الحالي بشكل صحيح
-        await event.reply(f"User: {user.id} - {mention}\nTime Banned: {ban_time}\nCurrent Time: {current_time.strftime('%H:%M:%S')}", parse_mode="md")
+        await event.reply(f"User: {user.id} - {mention}\nBanned Date: {ban_date}\nBanned Time: {ban_time}", parse_mode="md")
 
 # تشغيل الكود عبر حدث
 from telethon import events
