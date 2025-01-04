@@ -28,11 +28,11 @@ async def get_users_without_write_permission(event):
         await event.reply("لا يوجد مستخدمون محظورون في هذه المجموعة.")
         return
 
-    # إرسال النتائج لكل المستخدمين المحظورين
+    # إرسال النتائج للمستخدم الذي أرسل الأمر
     for user in participants.users:
-        # إذا كان المستخدم لديه اسم مستخدم، استخدمه في المذكرة
-        mention = f"[{user.first_name}](https://t.me/@{user.username})" if user.username else f"[{user.first_name}](tg://user?id={user.id})"
-        await event.reply(f"User: {user.id} - {mention}", parse_mode="md")
+        # إذا كان للمستخدم اسم مستخدم
+        mention = f"[@{user.username}](https://t.me/{user.username})" if user.username else f"[{user.first_name}](tg://user?id={user.id})"
+        await client.send_message(event.sender_id, f"User: {user.id} - {mention}", parse_mode="md")
 
 # تشغيل الكود عبر حدث
 from telethon import events
