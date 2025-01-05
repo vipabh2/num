@@ -1,56 +1,83 @@
-from telethon import TelegramClient, events
-# from telethon.tl.types import ChatPermissions
+from telethon.sync import TelegramClient
+from telethon.tl.functions.channels import GetParticipantsRequest
+from telethon.tl.types import ChannelParticipantsBanned
+from telethon import events
 import os
+from datetime import datetime
 
 # جلب بيانات البوت من المتغيرات البيئية
 api_id = os.getenv('API_ID')
 api_hash = os.getenv('API_HASH')
 bot_token = os.getenv('BOT_TOKEN')
 
+# إنشاء العميل الأساسي
 client = TelegramClient('bot', api_id, api_hash).start(bot_token=bot_token)
+from datetime import datetime
 
-# حدث لمراقبة التغييرات في حالة المستخدم داخل المجموعة
-@client.on(events.ChatAction)
-async def action_handler(event):
+# existing user_ban_times dictionary to save ban times
+user_ban_times = {}
+
+# Updated user_update_handler to save ban time
+@client.on(events.UserUpdate)
+async def user_update_handler(event):
     try:
-        if event.user_added:
-            print(f"تم إضافة المستخدم {event.user_id} إلى المجموعة {event.chat_id}")
-        elif event.user_kicked:
-            print(f"تم إزالة المستخدم {event.user_id} من المجموعة {event.chat_id}")
-        elif event.user_restricted:
-            print(f"تم تقييد المستخدم {event.user_id} في المجموعة {event.chat_id}")
+        if event.user_id and event.is_banned:
+            # إذا كان المستخدم قد تم تقييده، نرسل إشعارًا
+            user_id = event.user_id
+            ban_time = datetime.now().strftime("%Y-%m-%d %I:%M:%S %p")
+            ban_message = f"تم تقييد المستخدم {user_id} في {ban_time}."
+            
+            # استخراج معرّف المجموعة من الحدث (إذا تم التقييد داخل مجموعة معينة)
+            if hasattr(event, 'chat_id'):
+                group_username = event.chat_id  # إذا كان event يحتوي على معرّف المجموعة
+                await client.send_message(group_username, ban_message)
+
+            # save ban time
+            user_ban_times[user_id] = {
+                "ban_time": ban_time,
+                "first_name": event.user.first_name if event.user else "Unknown"
+            }
+    except Exception as e:
+        error_message = f"حدث خطأ أثناء محاولة تقييد المستخدم {event.user_id}: {str(e)}"
+        group_username = 'ID_OF_ADMIN_OR_GROUP'
+        await client.send_message(group_username, error_message)
+        print(f"Error: {str(e)}")  # طباعة الخطأ في السجل
+
+async def get_users_without_write_permission(event):   
+    try:
+        group_username = event.chat_id  # الحصول على معرف المجموعة من الحدث
+        participants = await client(GetParticipantsRequest(
+            channel=group_username,
+            filter=ChannelParticipantsBanned(q=""),
+            offset=0,
+            limit=100,
+            hash=0
+        ))
+                
+        if not participants.users:
+            await event.reply("لا يوجد مستخدمون محظورون في هذه المجموعة.")
+            return
+
+        for user in participants.users:
+            mention = f"[@{user.username}](https://t.me/@{user.username})" if user.username else f"[{user.first_name}](tg://user?id={user.id})"
+            ban_info = user_ban_times.get(user.id, {"ban_time": "غير معروف", "first_name": "غير معروف"})
+            ban_time = ban_info["ban_time"]
+            first_name = ban_info["first_name"]
+            await event.reply(f"User: {first_name} - {mention}\nBanned Time: {ban_time}", parse_mode="md")
+    except Exception as e:
+        error_message = f"حدث خطأ أثناء جلب المشاركين المحظورين: {str(e)}"
+        group_username = 'ID_OF_ADMIN_OR_GROUP'
+        await client.send_message(group_username, error_message)
+        print(f"Error: {str(e)}")  # طباعة الخطأ في السجل
+
+@client.on(events.NewMessage(pattern='/get_banned'))
+async def handle_event(event):
+    try:
+        await get_users_without_write_permission(event)
+    except Exception as e:
+        error_message = f"حدث خطأ أثناء تنفيذ أمر /get_banned: {str(e)}"
+        group_username = 'ID_OF_ADMIN_OR_GROUP'
+        await client.send_message(group_username, error_message)
+        print(f"Error: {str(e)}")  # طباعة الخطأ في السجل
         
-    except Exception as e:
-        print(f"حدث خطأ في مراقبة التغييرات: {str(e)}")
-
-# حدث لتقييد مستخدم (تعديل الأذونات)
-@client.on(events.NewMessage(pattern='/restrict'))
-async def restrict_user(event):
-    try:
-        if event.chat_id:
-            # معرّف المستخدم الذي سيتم تقييده
-            user_id = event.reply_to_msg_id  # مثال لتقييد المستخدم المرسل للرسالة السابقة
-            chat_id = event.chat_id  # معرّف المجموعة
-
-            # الأذونات التي نريد تعيينها (مثال: منع الكتابة)
-            permissions = ChatPermissions(
-                send_messages=False,  # منع إرسال الرسائل
-                send_media=False,     # منع إرسال الوسائط
-                send_stickers=False,  # منع إرسال الملصقات
-                send_games=False,     # منع إرسال الألعاب
-                send_inline=False,    # منع إرسال الروابط المباشرة
-                embed_links=False,    # منع إدراج الروابط
-            )
-
-            # تعديل الأذونات
-            await client.edit_permissions(chat_id, user_id, permissions)
-
-            # إشعار بخصوص التقييد
-            await event.reply(f"تم تقييد المستخدم {user_id} في هذه المجموعة.")
-    
-    except Exception as e:
-        # التعامل مع الأخطاء
-        await event.reply(f"حدث خطأ: {str(e)}")
-
-# إبقاء البوت قيد التشغيل
 client.run_until_disconnected()
