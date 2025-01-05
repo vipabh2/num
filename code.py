@@ -25,7 +25,6 @@ abh = [
     "😶",
     "https://t.me/VIPABH/1214"
 ]
-########################################################
 @client.on(events.NewMessage(func=lambda e: e.text and (
     'مخفي' in e.text.strip().lower() or 
     'المخفي' in e.text.strip().lower() or
@@ -36,6 +35,7 @@ async def reply(event):
         await event.reply(file=vipabh)
     else:
         await event.reply(vipabh)
+
 ########################################################
 url = "https://ar.wikipedia.org/w/api.php"
 searching_state = {}
