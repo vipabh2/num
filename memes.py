@@ -1,5 +1,4 @@
 from sqlalchemy import Column, String
-from . import BASE, SESSION, engine
 
 class AljokerLink(BASE):
     __tablename__ = "aljoker_links"
