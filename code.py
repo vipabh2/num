@@ -27,11 +27,11 @@ if __name__ == "__main__":
     while True:
         try:
             # print("✨ بدء تشغيل العميل...")
-            Client.start()
+            client.start()
             # print("✅ العميل يعمل الآن!")
             Client.run_until_disconnected()
         except Exception as e:
             print(f"⚠️ حدث خطأ: {e}")
             # print("⏳ إعادة المحاولة بعد 5 ثوانٍ...")
-            # time.sleep(5)
+            time.sleep(5)
 
