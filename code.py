@@ -15,8 +15,8 @@ from telethon.tl.custom import Button
 #########
 api_id = os.getenv('API_ID')      
 api_hash = os.getenv('API_HASH')  
-Client_token = os.getenv('Client_TOKEN') 
-Client = TelegramClient('n', api_id, api_hash).start(Client_token=Client_token)
+Client_token = os.getenv('bot_TOKEN') 
+Client = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
 ##########################################################################
 
 @Client.on(events.NewMessage(pattern=r"ميمز (\S+) (.+)"))
