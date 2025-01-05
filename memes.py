@@ -14,11 +14,15 @@ AljokerLink.__table__.create(bind=engine, checkfirst=True)
 def get_link(key):
     link = SESSION.query(AljokerLink).get(str(key))
     return link.url if link else None
-
 def add_link(key, url):
-    link = AljokerLink(str(key), str(url))
-    SESSION.add(link)
-    SESSION.commit()
+    existing_link = SESSION.query(AljokerLink).filter_by(key=key).first()
+    if existing_link:
+        existing_link.url = url 
+        SESSION.commit()
+    else:
+        new_link = AljokerLink(key=key, url=url)
+        SESSION.add(new_link)
+        SESSION.commit()
 
 def delete_link(key):
     link = SESSION.query(AljokerLink).get(str(key))
