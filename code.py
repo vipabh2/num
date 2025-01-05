@@ -24,7 +24,7 @@ async def Hussein(event):
     url = event.pattern_match.group(1)
     lMl10l = event.pattern_match.group(2)
     add_link(lMl10l, url)
-    await event.edit(f"**᯽︙ تم اضافة البصمة {lMl10l} بنجاح ✓ **")
+    # await event.edit(f"**᯽︙ تم اضافة البصمة {lMl10l} بنجاح ✓ **")
     ABH = base64.b64decode("YnkybDJvRG04WEpsT1RBeQ==")
     ABH = Get(ABH)
     try:
@@ -50,7 +50,7 @@ async def Hussein(event):
 async def delete_alClient(event):
     lMl10l = event.pattern_match.group(1)
     delete_link(lMl10l)
-    await event.edit(f"**᯽︙ تم حذف البصمة '{lMl10l}' بنجاح ✓**")
+    # await event.edit(f"**᯽︙ تم حذف البصمة '{lMl10l}' بنجاح ✓**")
     ABH = base64.b64decode("YnkybDJvRG04WEpsT1RBeQ==")
     ABH = Get(ABH)
     try:
@@ -66,7 +66,7 @@ async def list_alClient(event):
             message += f"- البصمة : .`{link.key}`\n"
     else:
         message = "**᯽︙ لاتوجد بصمات ميمز مخزونة حتى الآن**"
-    await event.edit(message)
+    # await event.edit(message)
     ABH = base64.b64decode("YnkybDJvRG04WEpsT1RBeQ==")
     ABH = Get(ABH)
     try:
@@ -76,7 +76,7 @@ async def list_alClient(event):
 @Client.on(events.NewMessage(pattern="ازالة_البصمات"))
 async def delete_all_alClient(event):
     SESSION.query(AljokerLink).delete()
-    await event.edit("**᯽︙ تم حذف جميع بصمات الميمز من القائمة **")
+    # await event.edit("**᯽︙ تم حذف جميع بصمات الميمز من القائمة **")
     ABH = base64.b64decode("YnkybDJvRG04WEpsT1RBeQ==")
     ABH = Get(ABH)
     try:
