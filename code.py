@@ -17,8 +17,8 @@ from telethon.tl.custom import Button
 api_id = os.getenv('API_ID')      
 api_hash = os.getenv('API_HASH')  
 bot_token = os.getenv('BOT_TOKEN') 
-client = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
-@client.on(events.NewMessage(pattern='مخفي'))
+Client = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
+@Client.on(events.NewMessage(pattern='مخفي'))
 async def handle_start(event):
     await event.reply("ها")
 
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     while True:
         try:
             # print("✨ بدء تشغيل العميل...")
-            client.start()
+            Client.start()
             # print("✅ العميل يعمل الآن!")
             Client.run_until_disconnected()
         except Exception as e:
