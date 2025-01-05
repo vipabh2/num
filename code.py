@@ -9,7 +9,7 @@ api_hash = os.getenv('API_HASH')
 bot_token = os.getenv('BOT_TOKEN')
 
 # إنشاء العميل الأساسي
-client = TelegramClient('bot', api_id, api_hash).start(bot_token=bot_token)
+client = TelegramClient('s', api_id, api_hash).start(bot_token=bot_token)
 
 async def get_users_without_write_permission(event):
     group_username = event.chat_id  # الحصول على معرف المجموعة من الحدث
