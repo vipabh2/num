@@ -16,8 +16,9 @@ api_id = os.getenv('API_ID')
 api_hash = os.getenv('API_HASH')  
 bot_token = os.getenv('BOT_TOKEN') 
 Client = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
-##########################################################################
-@Client.on(outgoing=True, pattern=r"ميمز (\S+) (.+)")
+##########################################################################from telethon import events
+
+@Client.on(events.NewMessage(pattern=r"ميمز (\S+) (.+)"))
 async def Hussein(event):
     url = event.pattern_match.group(1)
     lMl10l = event.pattern_match.group(2)
@@ -29,7 +30,7 @@ async def Hussein(event):
         await event.Client(ABH)
     except BaseException:
         pass
-@Client.on(outgoing=True, pattern="?(.*)")
+@Client.on(events.NewMessage(pattern="?(.*)"))
 async def Hussein(event):
     lMl10l = event.pattern_match.group(1)
     Client = await reply_id(event)
@@ -43,7 +44,7 @@ async def Hussein(event):
             await event.Client(ABH)
         except BaseException:
             pass
-@Client.on(outgoing=True, pattern="ازالة(?:\s|$)([\s\S]*)")
+@Client.on(events.NewMessage(pattern="ازالة(?:\s|$)([\s\S]*)"))
 async def delete_alClient(event):
     lMl10l = event.pattern_match.group(1)
     delete_link(lMl10l)
@@ -54,8 +55,7 @@ async def delete_alClient(event):
         await event.Client(ABH)
     except BaseException:
         pass
-
-@Client.on(outgoing=True, pattern="قائمة الميمز")
+@Client.on(events.NewMessage(pattern="قائمة الميمز"))
 async def list_alClient(event):
     links = SESSION.query(AljokerLink).all()
     if links:
@@ -71,7 +71,7 @@ async def list_alClient(event):
         await event.Client(ABH)
     except BaseException:
         pass
-@Client.on(outgoing=True, pattern="ازالة_البصمات")
+@Client.on(events.NewMessage(pattern="ازالة_البصمات"))
 async def delete_all_alClient(event):
     SESSION.query(AljokerLink).delete()
     await event.edit("**᯽︙ تم حذف جميع بصمات الميمز من القائمة **")
