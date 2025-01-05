@@ -29,7 +29,8 @@ async def Hussein(event):
     try:
         await event.Client(ABH)
     except BaseException:
-        pass@Client.on(events.NewMessage(pattern=r"\?(.*)"))
+        pass
+@Client.on(events.NewMessage(pattern=r"\?(.*)"))
 async def Hussein(event):
     lMl10l = event.pattern_match.group(1)
     Client = await reply_id(event)
