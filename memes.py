@@ -1,5 +1,5 @@
-from sqlalchemy import Column, String
-
+from sqlalchemy import Column, Integer, String
+from db import BASE, SESSION, engine
 class AljokerLink(BASE):
     __tablename__ = "aljoker_links"
     key = Column(String(255), primary_key=True)
