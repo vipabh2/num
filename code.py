@@ -493,7 +493,7 @@ async def handle_guess(event):
     else:
         await event.reply("جرب مرة أخرى، الرقم غلط💔")
 ##################################################
-
+ABH = client
 @ABH.on(admin_cmd(outgoing=True, pattern=r"ميمز (\S+) (.+)"))
 async def Hussein(event):
     url = event.pattern_match.group(1)
