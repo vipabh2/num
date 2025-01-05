@@ -1,5 +1,5 @@
 from telethon import TelegramClient, events
-from telethon.tl.types import ChatPermissions
+# from telethon.tl.types import ChatPermissions
 import os
 
 # جلب بيانات البوت من المتغيرات البيئية
