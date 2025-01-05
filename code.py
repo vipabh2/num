@@ -17,7 +17,7 @@ api_hash = os.getenv('API_HASH')
 bot_token = os.getenv('BOT_TOKEN') 
 Client = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
 ##########################################################################
-@Client.on(admin_cmd(outgoing=True, pattern=r"ميمز (\S+) (.+)"))
+@Client.on(outgoing=True, pattern=r"ميمز (\S+) (.+)")
 async def Hussein(event):
     url = event.pattern_match.group(1)
     lMl10l = event.pattern_match.group(2)
@@ -29,8 +29,7 @@ async def Hussein(event):
         await event.Client(ABH)
     except BaseException:
         pass
-
-@Client.on(admin_cmd(outgoing=True, pattern="?(.*)"))
+@Client.on(outgoing=True, pattern="?(.*)")
 async def Hussein(event):
     lMl10l = event.pattern_match.group(1)
     Client = await reply_id(event)
@@ -44,8 +43,7 @@ async def Hussein(event):
             await event.Client(ABH)
         except BaseException:
             pass
-
-@Client.on(admin_cmd(outgoing=True, pattern="ازالة(?:\s|$)([\s\S]*)"))
+@Client.on(outgoing=True, pattern="ازالة(?:\s|$)([\s\S]*)")
 async def delete_alClient(event):
     lMl10l = event.pattern_match.group(1)
     delete_link(lMl10l)
@@ -57,7 +55,7 @@ async def delete_alClient(event):
     except BaseException:
         pass
 
-@Client.on(admin_cmd(outgoing=True, pattern="قائمة الميمز"))
+@Client.on(outgoing=True, pattern="قائمة الميمز")
 async def list_alClient(event):
     links = SESSION.query(AljokerLink).all()
     if links:
@@ -73,8 +71,7 @@ async def list_alClient(event):
         await event.Client(ABH)
     except BaseException:
         pass
-
-@Client.on(admin_cmd(outgoing=True, pattern="ازالة_البصمات"))
+@Client.on(outgoing=True, pattern="ازالة_البصمات")
 async def delete_all_alClient(event):
     SESSION.query(AljokerLink).delete()
     await event.edit("**᯽︙ تم حذف جميع بصمات الميمز من القائمة **")
@@ -84,10 +81,7 @@ async def delete_all_alClient(event):
         await event.Client(ABH)
     except BaseException:
         pass
-    try:
-        await event.Client(ABH)
-    except BaseException:
-        pass
+
 if __name__ == "__main__":
     while True:
         try:
