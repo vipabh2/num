@@ -15,11 +15,11 @@ from telethon.tl.custom import Button
 #########
 api_id = os.getenv('API_ID')      
 api_hash = os.getenv('API_HASH')  
-bot_token = os.getenv('BOT_TOKEN') 
-bot = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
+Client_token = os.getenv('Client_TOKEN') 
+Client = TelegramClient('n', api_id, api_hash).start(Client_token=Client_token)
 ##########################################################################
 
-@bot.on(events.NewMessage(pattern=r"ميمز (\S+) (.+)"))
+@Client.on(events.NewMessage(pattern=r"ميمز (\S+) (.+)"))
 async def Hussein(event):
     url = event.pattern_match.group(1)
     lMl10l = event.pattern_match.group(2)
@@ -31,7 +31,7 @@ async def Hussein(event):
     except BaseException:
         pass
 
-@bot.on(events.NewMessage(pattern=r"\?(.*)"))
+@Client.on(events.NewMessage(pattern=r"\?(.*)"))
 async def Hussein(event):
     lMl10l = event.pattern_match.group(1)
     url = get_link(lMl10l)
@@ -39,7 +39,7 @@ async def Hussein(event):
         await event.client.send_file(event.chat_id, url, parse_mode="html")
         await event.delete()
 
-@bot.on(events.NewMessage(pattern="ازالة(?:\s|$)([\s\S]*)"))
+@Client.on(events.NewMessage(pattern="ازالة(?:\s|$)([\s\S]*)"))
 async def delete_alClient(event):
     lMl10l = event.pattern_match.group(1)
     delete_link(lMl10l)
@@ -50,7 +50,7 @@ async def delete_alClient(event):
     except BaseException:
         pass
 
-@bot.on(events.NewMessage(pattern="قائمة الميمز"))
+@Client.on(events.NewMessage(pattern="قائمة الميمز"))
 async def list_alClient(event):
     links = SESSION.query(AljokerLink).all()
     if links:
@@ -61,7 +61,7 @@ async def list_alClient(event):
         message = "**لاتوجد بصمات ميمز مخزونة حتى الآن**"
     await event.client.send_message(event.chat_id, message)
 
-@bot.on(events.NewMessage(pattern="ازالة_البصمات"))
+@Client.on(events.NewMessage(pattern="ازالة_البصمات"))
 async def delete_all_alClient(event):
     SESSION.query(AljokerLink).delete()
     await event.client.send_message(event.chat_id, "تم حذف جميع بصمات الميمز")
@@ -76,6 +76,6 @@ if __name__ == "__main__":
             Client.run_until_disconnected()
         except Exception as e:
             print(f"⚠️ حدث خطأ: {e}")
-            print("⏳ إعادة المحاولة بعد 5 ثوانٍ...")
-            time.sleep(5)
+            # print("⏳ إعادة المحاولة بعد 5 ثوانٍ...")
+            # time.sleep(5)
 
