@@ -1,7 +1,9 @@
 from telethon import TelegramClient, events, Button
 from models import add_or_update_user, add_point_to_winner, get_user_score
+from memes import get_link, add_link, delete_link
 from bs4 import BeautifulSoup
 import requests
+import base64
 import random
 import time
 from datetime import datetime
