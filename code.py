@@ -18,10 +18,24 @@ api_id = os.getenv('API_ID')
 api_hash = os.getenv('API_HASH')  
 bot_token = os.getenv('BOT_TOKEN') 
 Client = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
+#######################################################################################
+abh = [
+    "ها",
+    "تفظل",
+    "كول",
+    "اسمعك",
+    "شرايد",
+    "خلصني",
+    "https://t.me/VIPABH/1214",
+    "https://t.me/VIPABH/1215"
+]
 @Client.on(events.NewMessage(pattern='مخفي'))
-async def handle_start(event):
-    await event.reply("ها")
-
+async def reply(event):
+    vipabh = random.choice(abh)
+    if vipabh.startswith("http"):
+        await event.reply(file=vipabh)
+    else:
+        await event.reply(vipabh)
 
 if __name__ == "__main__":
     while True:
