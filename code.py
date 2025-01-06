@@ -17,11 +17,33 @@ api_hash = os.getenv('API_HASH')
 bot_token = os.getenv('BOT_TOKEN') 
 client = TelegramClient('n', api_id, api_hash).start(bot_token=bot_token)
 #######################################################################################
-@client.on(events.NewMessage(pattern='مخفي'))
-async def handle_start(event):
-    await event.reply("ها")
+abh = [
+    "ها",
+    "تفظل",
+    "كول",
+    "اسمعك",
+    "شرايد",
+    "شرايد",
+    "خلصني",
+    "https://t.me/VIPABH/1214"
+    "https://t.me/VIPABH/1215"
+]
 
-
+@client.on(events.NewMessage(func=lambda e: e.text and (
+    'مخفي' in e.text.strip().lower() or 
+    'المخفي' in e.text.strip().lower() or 
+    'انيموس' in e.text.strip().lower())))
+@client.on(events.NewMessage(func=lambda e: e.text and any(word in e.text.strip().lower() for word in ['مخفي', 'المخفي', 'انيموس'])))
+async def reply(event):
+    vipabh = random.choice(abh)
+    if vipabh.startswith("http"):
+        await event.reply(file=vipabh)
+    else:
+    if vipabh.startswith("http"):
+        await event.reply(file=vipabh)
+    else:
+        await event.reply(vipabh)
+        
 ########################################################
 url = "https://ar.wikipedia.org/w/api.php"
 searching_state = {}
