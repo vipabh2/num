@@ -1,4 +1,4 @@
-
+from telethon import TelegramClient, events, Button
 api_id = "20464188"
 api_hash = "91f0d1ea99e43f18d239c6c7af21c40f"
 bot_token = "6965198274:AAEEKwAxxzrKLe3y9qMsjidULbcdm_uQ8IE"
