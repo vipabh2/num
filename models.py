@@ -1,32 +1,36 @@
-from sqlalchemy import Column, Integer, String
-from db import BASE, SESSION, engine
+from sqlalchemy import create_engine, Column, String, Integer
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
-class UserScore(BASE):
-    __tablename__ = "user_scores"
-    user_id = Column(String(255), primary_key=True) 
-    username = Column(String(255))  
-    score = Column(Integer, default=0)  
+# إعداد قاعدة بيانات PostgreSQL
+DATABASE_URL = "postgresql://postgres:your_password@localhost:5432/num"
+engine = create_engine(DATABASE_URL)
 
-    def __init__(self, user_id, username, score=0):
-        self.user_id = str(user_id)
-        self.username = str(username)
-        self.score = score
+BASE = declarative_base()
 
-UserScore.__table__.create(bind=engine, checkfirst=True)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+SESSION = SessionLocal()
 
-def add_or_update_user(user_id, username):
-    user = SESSION.query(UserScore).get(str(user_id))
-    if not user:
-        user = UserScore(user_id=str(user_id), username=str(username))
-        SESSION.add(user)
+class Whisper(BASE):
+    __tablename__ = "whispers"
+    whisper_id = Column(String(255), primary_key=True)
+    sender_id = Column(String(255))
+    username = Column(String(255))
+    message = Column(String(255))
+
+    def __init__(self, whisper_id, sender_id, username, message):
+        self.whisper_id = whisper_id
+        self.sender_id = sender_id
+        self.username = username
+        self.message = message
+
+BASE.metadata.create_all(bind=engine)
+
+def store_whisper(whisper_id, sender_id, username, message):
+    whisper = Whisper(whisper_id=whisper_id, sender_id=sender_id, username=username, message=message)
+    SESSION.add(whisper)
     SESSION.commit()
 
-def add_point_to_winner(user_id):
-    user = SESSION.query(UserScore).get(str(user_id))
-    if user:
-        user.score += 1
-        SESSION.commit()
-
-def get_user_score(user_id):
-    user = SESSION.query(UserScore).get(str(user_id))
-    return user.score if user else 0
+def get_whisper(whisper_id):
+    whisper = SESSION.query(Whisper).filter(Whisper.whisper_id == whisper_id).first()
+    return whisper
