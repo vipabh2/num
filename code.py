@@ -1,3 +1,23 @@
+from telethon import TelegramClient, events, Button
+from sqlalchemy import create_engine, Column, String, Integer
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+# إعدادات قاعدة البيانات
+DATABASE_URL = "sqlite:///./test.db"  # يمكنك تغيير URL لقاعدة البيانات الخاصة بك
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+Base = declarative_base()
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+# إنشاء الجداول في قاعدة البيانات
+class Whisper(Base):
+    __tablename__ = "whispers"
+    whisper_id = Column(String, primary_key=True, index=True)
+    sender_id = Column(String)
+    username = Column(String)
+    message = Column(String)
+
+Base.metadata.create_all(bind=engine)
 
 # إعدادات البوت
 api_id = "20464188"
