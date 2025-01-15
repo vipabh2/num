@@ -1,4 +1,3 @@
-from telethon import TelegramClient, events, Button
 
 # إعدادات البوت
 api_id = "20464188"
@@ -6,14 +5,19 @@ api_hash = "91f0d1ea99e43f18d239c6c7af21c40f"
 bot_token = "6965198274:AAEEKwAxxzrKLe3y9qMsjidULbcdm_uQ8IE"
 client = TelegramClient('bot', api_id, api_hash).start(bot_token=bot_token)
 
-# الدوال للتفاعل مع قاعدة البيانات (إذا كانت موجودة لديك)
+# دوال قاعدة البيانات
 def store_whisper(whisper_id, sender_id, username, message):
-    # تنفيذ الكود لتخزين الهمسة في قاعدة البيانات
-    pass
+    db = SessionLocal()
+    db_whisper = Whisper(whisper_id=whisper_id, sender_id=str(sender_id), username=username, message=message)
+    db.add(db_whisper)
+    db.commit()
+    db.close()
 
 def get_whisper(whisper_id):
-    # تنفيذ الكود لاسترجاع الهمسة من قاعدة البيانات
-    pass
+    db = SessionLocal()
+    whisper = db.query(Whisper).filter(Whisper.whisper_id == whisper_id).first()
+    db.close()
+    return whisper
 
 @client.on(events.InlineQuery)
 async def inline_query_handler(event):
@@ -49,6 +53,12 @@ async def inline_query_handler(event):
                     description="همس",
                     text='اضغط هنا'
                 )
+        else:
+            result = builder.article(
+                title='خطأ في التنسيق',
+                description="يرجى استخدام التنسيق الصحيح: @username <message>",
+                text='التنسيق غير صحيح، يرجى إرسال الهمسة بالتنسيق الصحيح: @username <message>'
+            )
         await event.answer([result])
 
 @client.on(events.CallbackQuery)
