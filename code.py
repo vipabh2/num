@@ -72,5 +72,5 @@ async def callback_query_handler(event):
         except Exception as e:
             await event.answer(f'حدث خطأ: {str(e)}', alert=True)
 
-# التأكد من استمرار الاتصال بالبوت
+# استمرار الاتصال بالبوت
 client.run_until_disconnected()
