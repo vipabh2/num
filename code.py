@@ -1,13 +1,16 @@
 from telethon import TelegramClient, events, Button
-from sqlalchemy import create_engine, Column, String, Integer
+from sqlalchemy import create_engine, Column, String
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, Session
 
 # إعدادات قاعدة البيانات
-DATABASE_URL = "sqlite:///./test.db"  # يمكنك تغيير URL لقاعدة البيانات الخاصة بك
+DATABASE_URL = "sqlite:///./test.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
-Base = declarative_base()
+
+# إنشاء مصنع الجلسات في SQLAlchemy
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+Base = declarative_base()
 
 # إنشاء الجداول في قاعدة البيانات
 class Whisper(Base):
@@ -28,16 +31,25 @@ client = TelegramClient('bot', api_id, api_hash).start(bot_token=bot_token)
 # دوال قاعدة البيانات
 def store_whisper(whisper_id, sender_id, username, message):
     db = SessionLocal()
-    db_whisper = Whisper(whisper_id=whisper_id, sender_id=str(sender_id), username=username, message=message)
-    db.add(db_whisper)
-    db.commit()
-    db.close()
+    try:
+        db_whisper = Whisper(whisper_id=whisper_id, sender_id=str(sender_id), username=username, message=message)
+        db.add(db_whisper)
+        db.commit()
+    except Exception as e:
+        db.rollback()  # التراجع عن العمليات إذا حدث خطأ
+        print(f"حدث خطأ أثناء إضافة الهمسة: {e}")
+    finally:
+        db.close()
 
 def get_whisper(whisper_id):
     db = SessionLocal()
-    whisper = db.query(Whisper).filter(Whisper.whisper_id == whisper_id).first()
-    db.close()
-    return whisper
+    try:
+        whisper = db.query(Whisper).filter(Whisper.whisper_id == whisper_id).first()
+        return whisper
+    except Exception as e:
+        print(f"حدث خطأ أثناء استرجاع الهمسة: {e}")
+    finally:
+        db.close()
 
 @client.on(events.InlineQuery)
 async def inline_query_handler(event):
