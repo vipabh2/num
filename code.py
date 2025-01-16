@@ -80,7 +80,8 @@ async def inline_query_handler(event):
                     text=f"همسة سرية إلى \n الله يثخن اللبن عمي ({username})",
                     buttons=[Button.inline(text='tap to see', data=f'send:{username}:{message}:{event.sender_id}:{whisper_id}')]
                 )
-            except Exception:
+            except Exception as e:
+                print(f"حدث خطأ أثناء معالجة الاستعلام: {e}")
                 result = builder.article(
                     title='لرؤية المزيد حول الهمس',
                     description="همس",
