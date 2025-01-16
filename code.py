@@ -53,45 +53,49 @@ def get_whisper(whisper_id):
 
 @client.on(events.InlineQuery)
 async def inline_query_handler(event):
-    global message, username
-    builder = event.builder
-    query = event.text
+builder = event.builder
+query = event.text.strip()
 
-    if query.strip(): 
-        parts = query.split(' ')
-        if len(parts) >= 2: 
-            message = ' '.join(parts[:-1]) 
-            username = parts[-1] 
-            
-            # if not username.startswith('@'):
-            #     username = f'@{username}'
-            
-            try:
-                whisper_id = f"{event.sender_id}:{username}"  # يمكن استخدام sender_id و username كـ id فريد للهمسة
-
-                # تخزين الهمسة في قاعدة البيانات
-                store_whisper(whisper_id, event.sender_id, username, message)
-
-                # إنشاء الهمسة مع زر
-                result = builder.article(
-                    title='اضغط لارسال الهمسة',
-                    description=f'إرسال الرسالة إلى {username}',
-                    text=f"همسة سرية إلى \n الله يثخن اللبن عمي ({username})",
-                    buttons=[Button.inline(text='tap to see', data=f'send:{username}:{message}:{event.sender_id}:{whisper_id}')]
-                )
-            except Exception as e:
-                result = builder.article(
-                    title='لرؤية المزيد حول الهمس',
-                    description="همس",
-                    text='اضغط هنا'
-                )
+if query: 
+    parts = query.split(' ')
+    if len(parts) >= 2: 
+        message = ' '.join(parts[:-1]) 
+        username = parts[-1] 
+        
+        # التحقق مما إذا كان الإدخال هو ID رقمي أو اسم مستخدم
+        if username.isdigit():
+            username = int(username)  # إذا كان الإدخال أرقام فقط، اعتبره ID رقمي
         else:
+            if not username.startswith('@'):
+                username = f'@{username}'  # إذا لم يبدأ بـ @، أضفه
+
+        try:
+            whisper_id = f"{event.sender_id}:{username}"  # إنشاء معرف فريد للهمسة
+
+            # تخزين الهمسة في قاعدة البيانات
+            store_whisper(whisper_id, event.sender_id, username, message)
+
+            # إنشاء رسالة الهمسة مع زر
             result = builder.article(
-                title='خطأ في التنسيق',
-                description="يرجى استخدام التنسيق الصحيح: @username <message>",
-                text='التنسيق غير صحيح، يرجى إرسال الهمسة بالتنسيق الصحيح: @username <message>'
+                title='اضغط لإرسال الهمسة',
+                description=f'إرسال الرسالة إلى {username}',
+                text=f"همسة سرية إلى \n الله يثخن اللبن عمي ({username})",
+                buttons=[Button.inline(text='tap to see', data=f'send:{username}:{message}:{event.sender_id}:{whisper_id}')]
             )
-        await event.answer([result])
+        except Exception as e:
+            result = builder.article(
+                title='خطأ أثناء إنشاء الهمسة',
+                description="حدث خطأ أثناء إنشاء الهمسة.",
+                text=f'حدث خطأ أثناء إنشاء الهمسة: {str(e)}'
+            )
+    else:
+        result = builder.article(
+            title='خطأ في التنسيق',
+            description="يرجى استخدام التنسيق الصحيح: @username <message>",
+            text='التنسيق غير صحيح، يرجى إرسال الهمسة بالتنسيق الصحيح: @username <message>'
+        )
+    await event.answer([result])
+
 
 @client.on(events.CallbackQuery)
 async def callback_query_handler(event):
