@@ -1,8 +1,8 @@
 from telethon import TelegramClient, events, Button
 from sqlalchemy import create_engine, Column, String
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-from datetime import datetime  
+from sqlalchemy.orm import sessionmaker, Session
+
 # إعدادات قاعدة البيانات
 DATABASE_URL = "sqlite:///./test.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
@@ -67,8 +67,7 @@ async def inline_query_handler(event):
                 username = f'@{username}'
             
             try:
-                # إنشاء whisper_id باستخدام sender_id و username بالإضافة إلى طابع زمني
-                whisper_id = f"{event.sender_id}:{username}_{int(datetime.timestamp(datetime.now()))}"
+                whisper_id = f"{event.sender_id}:{username}"  # يمكن استخدام sender_id و username كـ id فريد للهمسة
 
                 # تخزين الهمسة في قاعدة البيانات
                 store_whisper(whisper_id, event.sender_id, username, message)
@@ -81,7 +80,6 @@ async def inline_query_handler(event):
                     buttons=[Button.inline(text='tap to see', data=f'send:{username}:{message}:{event.sender_id}:{whisper_id}')]
                 )
             except Exception as e:
-                print(f"حدث خطأ أثناء معالجة الاستعلام: {e}")
                 result = builder.article(
                     title='لرؤية المزيد حول الهمس',
                     description="همس",
@@ -95,12 +93,11 @@ async def inline_query_handler(event):
             )
         await event.answer([result])
 
-
 @client.on(events.CallbackQuery)
 async def callback_query_handler(event):
     data = event.data.decode('utf-8')
     if data.startswith('send:'):
-        _, username, message, sender_id, whisper_id = data.split(':', 5)
+        _, username, message, sender_id, whisper_id = data.split(':', 4)
         try:
             # استرجاع الهمسة من قاعدة البيانات
             whisper = get_whisper(whisper_id)
