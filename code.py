@@ -29,7 +29,7 @@ async def start(event):
         "question": question,
         "waiting_for_answer": True  # وضع المستخدم في انتظار الإجابة
     }
-    await event.respond(f"مرحباً {event.sender.first_name}! 🌟\nسأطرح عليك سؤالاً:\n\n{question['question']}")
+    await event.reply(f"مرحباً {event.sender.first_name}! 🌟\nسأطرح عليك سؤالاً:\n\n{question['question']}")
 
 # مراقبة الإجابات
 @bot.on(events.NewMessage)
@@ -43,12 +43,9 @@ async def check_answer(event):
         correct_answer = current_question['answer'].lower()
 
         if user_message == correct_answer:
-            await event.respond("🎉 إجابة صحيحة! ممتاز!")
+            await event.reply("🎉 إجابة صحيحة! ممتاز!")
             del user_states[user_id]  # إزالة حالة المستخدم بعد الإجابة الصحيحة
-        else:
-            await event.respond("❌ إجابة خاطئة. حاول مرة أخرى!")
-    else:
-        await event.respond("اكتب /start لبدء اللعبة!")
+
 
 # تشغيل البوت
 print("Bot is running...")
