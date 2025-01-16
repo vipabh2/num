@@ -1,7 +1,7 @@
 from telethon import TelegramClient, events, Button
 from sqlalchemy import create_engine, Column, String
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import sessionmaker
 from datetime import datetime  
 # إعدادات قاعدة البيانات
 DATABASE_URL = "sqlite:///./test.db"
@@ -80,7 +80,7 @@ async def inline_query_handler(event):
                     text=f"همسة سرية إلى \n الله يثخن اللبن عمي ({username})",
                     buttons=[Button.inline(text='tap to see', data=f'send:{username}:{message}:{event.sender_id}:{whisper_id}')]
                 )
-            except Exception as e:
+            except Exception:
                 result = builder.article(
                     title='لرؤية المزيد حول الهمس',
                     description="همس",
@@ -99,7 +99,7 @@ async def inline_query_handler(event):
 async def callback_query_handler(event):
     data = event.data.decode('utf-8')
     if data.startswith('send:'):
-        _, username, message, sender_id, whisper_id = data.split(':', 4)
+        _, username, _, sender_id, whisper_id = data.split(':', 4)
         try:
             # استرجاع الهمسة من قاعدة البيانات
             whisper = get_whisper(whisper_id)
