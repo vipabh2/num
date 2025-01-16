@@ -12,7 +12,7 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
-# إنشاء الجداول في قاعدة البيانات
+# تعريف جدول الهمسات
 class Whisper(Base):
     __tablename__ = "whispers"
     whisper_id = Column(String, primary_key=True, index=True)
@@ -53,49 +53,48 @@ def get_whisper(whisper_id):
 
 @client.on(events.InlineQuery)
 async def inline_query_handler(event):
-builder = event.builder
-query = event.text.strip()
+    builder = event.builder
+    query = event.text.strip()
 
-if query: 
-    parts = query.split(' ')
-    if len(parts) >= 2: 
-        message = ' '.join(parts[:-1]) 
-        username = parts[-1] 
-        
-        # التحقق مما إذا كان الإدخال هو ID رقمي أو اسم مستخدم
-        if username.isdigit():
-            username = int(username)  # إذا كان الإدخال أرقام فقط، اعتبره ID رقمي
+    if query: 
+        parts = query.split(' ')
+        if len(parts) >= 2: 
+            message = ' '.join(parts[:-1]) 
+            username = parts[-1] 
+            
+            # التحقق مما إذا كان الإدخال هو ID رقمي أو اسم مستخدم
+            if username.isdigit():
+                username = username  # إذا كان الإدخال أرقام فقط، اعتبره ID رقمي
+            else:
+                if not username.startswith('@'):
+                    username = f'@{username}'  # إذا لم يبدأ بـ @، أضفه
+
+            try:
+                whisper_id = f"{event.sender_id}:{username}"  # إنشاء معرف فريد للهمسة
+
+                # تخزين الهمسة في قاعدة البيانات
+                store_whisper(whisper_id, event.sender_id, username, message)
+
+                # إنشاء رسالة الهمسة مع زر
+                result = builder.article(
+                    title='اضغط لإرسال الهمسة',
+                    description=f'إرسال الرسالة إلى {username}',
+                    text=f"همسة سرية إلى \n الله يثخن اللبن عمي ({username})",
+                    buttons=[Button.inline(text='tap to see', data=f'send:{username}:{message}:{event.sender_id}:{whisper_id}')]
+                )
+            except Exception as e:
+                result = builder.article(
+                    title='خطأ أثناء إنشاء الهمسة',
+                    description="حدث خطأ أثناء إنشاء الهمسة.",
+                    text=f'حدث خطأ أثناء إنشاء الهمسة: {str(e)}'
+                )
         else:
-            if not username.startswith('@'):
-                username = f'@{username}'  # إذا لم يبدأ بـ @، أضفه
-
-        try:
-            whisper_id = f"{event.sender_id}:{username}"  # إنشاء معرف فريد للهمسة
-
-            # تخزين الهمسة في قاعدة البيانات
-            store_whisper(whisper_id, event.sender_id, username, message)
-
-            # إنشاء رسالة الهمسة مع زر
             result = builder.article(
-                title='اضغط لإرسال الهمسة',
-                description=f'إرسال الرسالة إلى {username}',
-                text=f"همسة سرية إلى \n الله يثخن اللبن عمي ({username})",
-                buttons=[Button.inline(text='tap to see', data=f'send:{username}:{message}:{event.sender_id}:{whisper_id}')]
+                title='خطأ في التنسيق',
+                description="يرجى استخدام التنسيق الصحيح: @username <message>",
+                text='التنسيق غير صحيح، يرجى إرسال الهمسة بالتنسيق الصحيح: @username <message>'
             )
-        except Exception as e:
-            result = builder.article(
-                title='خطأ أثناء إنشاء الهمسة',
-                description="حدث خطأ أثناء إنشاء الهمسة.",
-                text=f'حدث خطأ أثناء إنشاء الهمسة: {str(e)}'
-            )
-    else:
-        result = builder.article(
-            title='خطأ في التنسيق',
-            description="يرجى استخدام التنسيق الصحيح: @username <message>",
-            text='التنسيق غير صحيح، يرجى إرسال الهمسة بالتنسيق الصحيح: @username <message>'
-        )
-    await event.answer([result])
-
+        await event.answer([result])
 
 @client.on(events.CallbackQuery)
 async def callback_query_handler(event):
@@ -108,7 +107,7 @@ async def callback_query_handler(event):
 
             if whisper:
                 # التأكد من أن الذي يضغط الزر هو نفس المرسل أو المرسل إليه
-                if f"@{event.sender.username or event.sender.id}" == username or str(event.sender_id) == sender_id:
+                if f"@{event.sender.username or event.sender_id}" == username or str(event.sender_id) == sender_id:
                     await event.answer(f"{whisper.message}", alert=True)
                 else:
                     await event.answer("هذه الرسالة ليست موجهة لك!", alert=True)
