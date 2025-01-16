@@ -67,7 +67,7 @@ async def inline_query_handler(event):
                 username = f'@{username}'
             
             try:
-                whisper_id = f"{event.sender_id}:{username}"  # يمكن استخدام sender_id و username كـ id فريد للهمسة
+                whisper_id = f"{whisper_id}_{int(datetime.timestamp(datetime.now()))}"
 
                 # تخزين الهمسة في قاعدة البيانات
                 store_whisper(whisper_id, event.sender_id, username, message)
