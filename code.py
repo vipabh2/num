@@ -2,7 +2,7 @@ from telethon import TelegramClient, events, Button
 from sqlalchemy import create_engine, Column, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Session
-
+from datetime import datetime  
 # إعدادات قاعدة البيانات
 DATABASE_URL = "sqlite:///./test.db"
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
@@ -67,7 +67,8 @@ async def inline_query_handler(event):
                 username = f'@{username}'
             
             try:
-                whisper_id = f"{whisper_id}_{int(datetime.timestamp(datetime.now()))}"
+                # إنشاء whisper_id باستخدام sender_id و username بالإضافة إلى طابع زمني
+                whisper_id = f"{event.sender_id}:{username}_{int(datetime.timestamp(datetime.now()))}"
 
                 # تخزين الهمسة في قاعدة البيانات
                 store_whisper(whisper_id, event.sender_id, username, message)
@@ -92,6 +93,7 @@ async def inline_query_handler(event):
                 text='التنسيق غير صحيح، يرجى إرسال الهمسة بالتنسيق الصحيح: @username <message>'
             )
         await event.answer([result])
+
 
 @client.on(events.CallbackQuery)
 async def callback_query_handler(event):
