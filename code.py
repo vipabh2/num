@@ -63,8 +63,8 @@ async def inline_query_handler(event):
             message = ' '.join(parts[:-1]) 
             username = parts[-1] 
             
-            if not username.startswith('@'):
-                username = f'@{username}'
+            # if not username.startswith('@'):
+            #     username = f'@{username}'
             
             try:
                 whisper_id = f"{event.sender_id}:{username}"  # يمكن استخدام sender_id و username كـ id فريد للهمسة
