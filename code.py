@@ -100,7 +100,7 @@ async def inline_query_handler(event):
 async def callback_query_handler(event):
     data = event.data.decode('utf-8')
     if data.startswith('send:'):
-        _, username, _, sender_id, whisper_id = data.split(':', 4)
+        _, username, message, sender_id, whisper_id = data.split(':', 5)
         try:
             # استرجاع الهمسة من قاعدة البيانات
             whisper = get_whisper(whisper_id)
