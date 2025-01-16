@@ -67,7 +67,8 @@ async def inline_query_handler(event):
                 username = f'@{username}'
             
             try:
-                whisper_id = f"{event.sender_id}:{username}"  # يمكن استخدام sender_id و username كـ id فريد للهمسة
+                # إنشاء معرف فريد باستخدام uuid
+                whisper_id = str(uuid.uuid4())  # يتم توليد معرف فريد باستخدام uuid
 
                 # تخزين الهمسة في قاعدة البيانات
                 store_whisper(whisper_id, event.sender_id, username, message)
