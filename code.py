@@ -104,7 +104,7 @@ async def callback_query_handler(event):
 
             if whisper:
                 # التأكد من أن الذي يضغط الزر هو نفس المرسل أو المرسل إليه
-                if f"@{event.sender.username}" == username or str(event.sender_id) == sender_id:
+                if f"@{event.sender.username or event.sender.id}" == username or str(event.sender_id) == sender_id:
                     await event.answer(f"{whisper.message}", alert=True)
                 else:
                     await event.answer("هذه الرسالة ليست موجهة لك!", alert=True)
