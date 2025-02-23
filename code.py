@@ -15,6 +15,10 @@ api_id = os.getenv('API_ID')
 api_hash = os.getenv('API_HASH')  
 bot_token = os.getenv('BOT_TOKEN') 
 ABH = TelegramClient('code', api_id, api_hash).start(bot_token=bot_token)
+@ABH.on(events.NewMessage(pattern="ابن هاشم وين؟"))
+async def t(event):
+    await event.reply("انتتقل صديق المجموعة الاخ ابن هاشم الى حسابه الجديد **الخطير حسوني**")
+    return
 banned_words = [
     "ارقه جاي", "يموط", "تموط", "موطلي", "اموط", "بورن", "الفرخ", "الفرحْ", "تيز", "كسم"
     "مايا", "ماية", "مايه", "بكسمك", "بكسختك", "🍑", "نغل", "نغولة", "نغوله", "ينغل", 
