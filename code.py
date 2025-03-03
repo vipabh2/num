@@ -77,6 +77,9 @@ async def send_alert(event):
     await event.reply("✅ تم إرسال التنبيه لجميع المحادثات!")
 @ABH.on(events.NewMessage(pattern=r'(?i)مخفي'))
 async def ai(event):
+    if event.text.strip() == "مخفي طكة زيج":
+        return
+    
     if (event.is_reply or len(event.text.strip().split()) > 1) and not event.out:
         try:
             if event.is_reply:
@@ -88,6 +91,7 @@ async def ai(event):
             await event.reply(f"**{ABH_response.text}**")
         except Exception as e:
             await event.reply(f"صار خطأ: {e}")
+
 choices = {"rock": "🪨حجره", "paper": "📜ورقة", "cuter": "✂️مقص"}
 active_games = {}
 @ABH.on(events.NewMessage(pattern="حجرة|/rock"))
